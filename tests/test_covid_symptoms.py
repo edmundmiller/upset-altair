@@ -1,5 +1,6 @@
 import json
 import re
+import pytest
 import altair as alt
 import pandas as pd
 from pathlib import Path
@@ -43,9 +44,10 @@ def upsetaltair_top_level_configuration(
     )
 
 
-@pytest.mark.skip(reason="This test is not implemented yet")
 def test_upset_by_frequency():
-    UpSetAltair(
+    """Test UpSet plot sorted by frequency"""
+    df = load_test_data()
+    chart = UpSetAltair(
         data=df.copy(),
         title="Symptoms Reported by Users of the COVID Symptom Tracker App",
         subtitle=[
@@ -65,10 +67,20 @@ def test_upset_by_frequency():
         sort_order="ascending",
     )
 
+    # Convert to Vega-Lite spec
+    vega_spec = chart.to_dict()
 
-@pytest.mark.skip(reason="This test is not implemented yet")
+    # Load expected spec
+    with open("tests/snapshots/covid_symptoms_by_frequency.vl.json") as f:
+        expected_spec = json.load(f)
+
+    assert vega_spec == expected_spec
+
+
 def test_upset_by_degree():
-    UpSetAltair(
+    """Test UpSet plot sorted by degree"""
+    df = load_test_data()
+    chart = UpSetAltair(
         data=df.copy(),
         title="Symptoms Reported by Users of the COVID Symptom Tracker App",
         subtitle=[
@@ -88,20 +100,35 @@ def test_upset_by_degree():
         sort_order="ascending",
     )
 
-@pytest.mark.skip(reason="This test is not implemented yet")
+    vega_spec = chart.to_dict()
+
+    with open("tests/snapshots/covid_symptoms_by_degree.vl.json") as f:
+        expected_spec = json.load(f)
+
+    assert vega_spec == expected_spec
+
+
 def test_upset_by_degree_custom():
-    UpSetAltair(
+    """Test UpSet plot with custom styling options"""
+    df = load_test_data()
+    chart = UpSetAltair(
         data=df.copy(),
         title="Symptoms Reported by Users of the COVID Symptom Tracker App",
         subtitle=[
             "Story & Data: https://www.nature.com/articles/d41586-020-00154-w",
-            "Altair-based UpSet Plot: https://github.com/hms-dbmi/upset-altair-notebook"
+            "Altair-based UpSet Plot: https://github.com/hms-dbmi/upset-altair-notebook",
         ],
-        sets=["Shortness of Breath", "Diarrhea", "Fever", "Cough", "Anosmia", "Fatigue"],
+        sets=[
+            "Shortness of Breath",
+            "Diarrhea",
+            "Fever",
+            "Cough",
+            "Anosmia",
+            "Fatigue",
+        ],
         abbre=["B", "D", "Fe", "C", "A", "Fa"],
         sort_by="degree",
         sort_order="ascending",
-
         # Custom options:
         width=900,
         height=500,
@@ -114,5 +141,12 @@ def test_upset_by_degree_custom():
         line_connection_size=1,
         horizontal_bar_size=16,
         vertical_bar_label_size=12,
-        vertical_bar_padding=14
+        vertical_bar_padding=14,
     )
+
+    vega_spec = chart.to_dict()
+
+    with open("tests/snapshots/covid_symptoms_by_degree_custom.vl.json") as f:
+        expected_spec = json.load(f)
+
+    assert vega_spec == expected_spec
