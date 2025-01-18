@@ -199,11 +199,9 @@ def load_test_data():
             "Iota",
             "Lambda",
             "Mu",
-            "-",
         ],
         axis=1,
     )
-    df = df.drop("-", axis=1)
 
     return df
 
@@ -380,6 +378,12 @@ def test_covid_mutations_subset(snapshot):
         sort_by="frequency",
         sort_order="ascending",
     )
+
+    # Save generated spec for debugging
+    output_dir = Path("tests/debug")
+    output_dir.mkdir(exist_ok=True)
+    with open(output_dir / "generated_mutations_subset.vl.json", "w") as f:
+        json.dump(chart.to_dict(), f, indent=2)
 
     # Compare normalized spec with JSON snapshot
     assert normalize_spec(chart.to_dict()) == snapshot(
