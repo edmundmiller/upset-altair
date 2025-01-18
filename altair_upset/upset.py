@@ -1,36 +1,6 @@
 import pandas as pd
 import altair as alt
-
-
-# Top-level altair configuration
-def upsetaltair_top_level_configuration(
-    base, legend_orient="top-left", legend_symbol_size=30
-):
-    return (
-        base.configure_view(stroke=None)
-        .configure_title(
-            fontSize=18, fontWeight=400, anchor="start", subtitlePadding=10
-        )
-        .configure_axis(
-            labelFontSize=14,
-            labelFontWeight=300,
-            titleFontSize=16,
-            titleFontWeight=400,
-            titlePadding=10,
-        )
-        .configure_legend(
-            titleFontSize=16,
-            titleFontWeight=400,
-            labelFontSize=14,
-            labelFontWeight=300,
-            padding=20,
-            orient=legend_orient,
-            symbolType="circle",
-            symbolSize=legend_symbol_size,
-        )
-        .configure_concat(spacing=0)
-    )
-
+from .config import upsetaltair_top_level_configuration
 
 def UpSetAltair(
     data=None,
@@ -53,30 +23,6 @@ def UpSetAltair(
     vertical_bar_label_size=16,
     vertical_bar_padding=20,
 ):
-    """This function generates Altair-based interactive UpSet plots.
-
-    Parameters:
-        - data (pandas.DataFrame): Tabular data containing the membership of each element (row) in
-            exclusive intersecting sets (column).
-        - sets (list): List of set names of interest to show in the UpSet plots.
-            This list reflects the order of sets to be shown in the plots as well.
-        - abbre (list): Abbreviated set names.
-        - sort_by (str): "frequency" or "degree"
-        - sort_order (str): "ascending" or "descending"
-        - width (int): Vertical size of the UpSet plot.
-        - height (int): Horizontal size of the UpSet plot.
-        - height_ratio (float): Ratio of height between upper and under views, ranges from 0 to 1.
-        - horizontal_bar_chart_width (int): Width of horizontal bar chart on the bottom-right.
-        - color_range (list): Color to encode sets.
-        - highlight_color (str): Color to encode intersecting sets upon mouse hover.
-        - glyph_size (int): Size of UpSet glyph (⬤).
-        - set_label_bg_size (int): Size of label background in the horizontal bar chart.
-        - line_connection_size (int): width of lines in matrix view.
-        - horizontal_bar_size (int): Height of bars in the horizontal bar chart.
-        - vertical_bar_label_size (int): Font size of texts in the vertical bar chart on the top.
-        - vertical_bar_padding (int): Gap between a pair of bars in the vertical bar charts.
-    """
-
     if (data is None) or (sets is None):
         print("No data and/or a list of sets are provided")
         return
@@ -163,66 +109,50 @@ def UpSetAltair(
     """
     Plots
     """
-    # To use native interactivity in Altair, we are using the data transformation functions
-    # supported in Altair.
     base = (
         alt.Chart(data)
         .transform_filter(legend_selection)
         .transform_pivot(
-            # Right before this operation, columns should be:
-            # `count`, `set`, `is_intersect`, (`intersection_id`, `degree`, `set_order`, `set_abbre`)
-            # where (fields with brackets) should be dropped and recalculated later.
             "set",
             op="max",
             groupby=["intersection_id", "count"],
             value="is_intersect",
         )
         .transform_aggregate(
-            # count, set1, set2, ...
             count="sum(count)",
             groupby=sets,
         )
         .transform_calculate(
-            # count, set1, set2, ...
             degree=degree_calculation
         )
         .transform_filter(
-            # count, set1, set2, ..., degree
             alt.datum["degree"] != 0
         )
         .transform_window(
-            # count, set1, set2, ..., degree
             intersection_id="row_number()",
             frame=[None, None],
         )
         .transform_fold(
-            # count, set1, set2, ..., degree, intersection_id
             sets,
             as_=["set", "is_intersect"],
         )
         .transform_lookup(
-            # count, set, is_intersect, degree, intersection_id
             lookup="set",
             from_=alt.LookupData(set_to_abbre, "set", ["set_abbre"]),
         )
         .transform_lookup(
-            # count, set, is_intersect, degree, intersection_id, set_abbre
             lookup="set",
             from_=alt.LookupData(set_to_order, "set", ["set_order"]),
         )
         .transform_filter(
-            # Make sure to remove the filtered sets.
             legend_selection
         )
         .transform_window(
-            # count, set, is_intersect, degree, intersection_id, set_abbre
             set_order="distinct(set)",
             frame=[None, 0],
             sort=[{"field": "set_order"}],
         )
     )
-    # Now, we have data in the following format:
-    # count, set, is_intersect, degree, intersection_id, set_abbre
 
     # Cardinality by intersecting sets (vertical bar chart)
     vertical_bar = (
@@ -292,7 +222,6 @@ def UpSetAltair(
     matrix_view = (
         circle + rect_bg + circle_bg + line_connection + circle
     ).add_selection(
-        # Duplicate `circle` is to properly show tooltips.
         color_selection
     )
 
@@ -336,7 +265,7 @@ def UpSetAltair(
         alt.hconcat(
             matrix_view,
             horizontal_bar_axis,
-            horizontal_bar,  # horizontal bar chart
+            horizontal_bar,
             spacing=5,
         ).resolve_scale(y="shared"),
         spacing=20,
@@ -356,4 +285,4 @@ def UpSetAltair(
         }
     )
 
-    return upsetaltair
+    return upsetaltair 
