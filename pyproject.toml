@@ -21,6 +21,7 @@ test = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "vl-convert-python>=1.6.0",
+    "syrupy>=4.0.0",
 ]
 
 [tool.pytest.ini_options]
