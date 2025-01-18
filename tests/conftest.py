@@ -211,7 +211,7 @@ def covid_mutations_data():
 
 def save_chart(filename, chart):
     """Save an Altair chart to PNG using Altair's built-in saving capabilities"""
-    chart.save(filename)
+    chart.save(filename, scale_factor=2.0)
 
 
 def normalize_spec(spec):
