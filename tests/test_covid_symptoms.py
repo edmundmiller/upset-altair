@@ -5,9 +5,19 @@ import altair as alt
 import pandas as pd
 from pathlib import Path
 from altair_upset import UpSetAltair
-from altair_saver import save
+import vl_convert as vlc
 from syrupy.extensions.image import PNGImageSnapshotExtension
 from syrupy.extensions.json import JSONSnapshotExtension
+
+# No need for these renderers since we're using vl-convert-python
+# alt.data_transformers.enable('default')
+# alt.renderers.enable('default')
+
+def save(filename, chart):
+    """Save an Altair chart to PNG using vl-convert-python"""
+    png_data = vlc.vegalite_to_png(chart.to_dict())
+    with open(filename, 'wb') as f:
+        f.write(png_data)
 
 
 def load_test_data():
@@ -137,9 +147,9 @@ def test_upset_by_frequency(snapshot):
     # Compare normalized spec with JSON snapshot
     assert normalize_spec(chart.to_dict()) == snapshot(name="vega_spec", extension_class=JSONSnapshotExtension)
 
-    # Save and compare image snapshot
-    chart.save("tests/debug/frequency.png")
-    with open("tests/debug/frequency.png", "rb") as f:
+    # Save and compare image snapshot using vl-convert-python
+    save(str(output_dir / "frequency.png"), chart)
+    with open(output_dir / "frequency.png", "rb") as f:
         assert f.read() == snapshot(name="image", extension_class=PNGImageSnapshotExtension)
 
 
@@ -175,9 +185,9 @@ def test_upset_by_degree(snapshot):
     # Compare normalized spec with JSON snapshot
     assert normalize_spec(chart.to_dict()) == snapshot(name="vega_spec", extension_class=JSONSnapshotExtension)
 
-    # Save and compare image snapshot
-    chart.save("tests/debug/degree.png")
-    with open("tests/debug/degree.png", "rb") as f:
+    # Save and compare image snapshot using vl-convert-python
+    save(str(output_dir / "degree.png"), chart)
+    with open(output_dir / "degree.png", "rb") as f:
         assert f.read() == snapshot(name="image", extension_class=PNGImageSnapshotExtension)
 
 
@@ -226,7 +236,7 @@ def test_upset_by_degree_custom(snapshot):
     # Compare normalized spec with JSON snapshot
     assert normalize_spec(chart.to_dict()) == snapshot(name="vega_spec", extension_class=JSONSnapshotExtension)
 
-    # Save and compare image snapshot
-    chart.save("tests/debug/degree_custom.png")
-    with open("tests/debug/degree_custom.png", "rb") as f:
+    # Save and compare image snapshot using vl-convert-python
+    save(str(output_dir / "degree_custom.png"), chart)
+    with open(output_dir / "degree_custom.png", "rb") as f:
         assert f.read() == snapshot(name="image", extension_class=PNGImageSnapshotExtension)

@@ -155,6 +155,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/vega-cli-5.6.0-0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-64/vega-lite-cli-4.17.0-h694c41f_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/vega_datasets-0.9.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-64/vl-convert-python-1.7.0-py310h837254d_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/wcwidth-0.2.13-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/webencodings-0.5.1-pyhd8ed1ab_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/websocket-client-1.8.0-pyhd8ed1ab_1.conda
@@ -190,7 +191,7 @@ packages:
 - pypi: .
   name: altair-upset
   version: 0.1.0
-  sha256: c74cdfee0e939e72a5d5c702745d4e70a5543108eb4b94b66d89c0e44fe50320
+  sha256: 48776250b815e4169608e46dceb25fb8904613c4f18cd024475157d1c2235e17
   requires_dist:
   - altair>=4.0.0,<5.0.0
   - pandas>=1.0.0
@@ -2104,6 +2105,23 @@ packages:
   - pkg:pypi/vega-datasets?source=hash-mapping
   size: 167814
   timestamp: 1734342761491
+- conda: https://conda.anaconda.org/conda-forge/osx-64/vl-convert-python-1.7.0-py310h837254d_1.conda
+  sha256: 15f90c3399e5cc82f260892c286781b8352c3501a6ac2b6f58af528a14dee1a3
+  md5: af4b5450186271598fdd027049d19db8
+  depends:
+  - __osx >=10.13
+  - python >=3.10,<3.11.0a0
+  - python_abi 3.10.* *_cp310
+  constrains:
+  - __osx >=10.13
+  arch: x86_64
+  platform: osx
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/vl-convert-python?source=hash-mapping
+  size: 21704033
+  timestamp: 1728158827629
 - conda: https://conda.anaconda.org/conda-forge/noarch/wcwidth-0.2.13-pyhd8ed1ab_1.conda
   sha256: f21e63e8f7346f9074fd00ca3b079bd3d2fa4d71f1f89d5b6934bf31446dc2a5
   md5: b68980f2495d096e71c7fd9d7ccf63e6

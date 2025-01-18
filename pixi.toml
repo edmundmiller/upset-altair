@@ -18,12 +18,13 @@ requests = "*"
 numpy = "*"
 altair = "4.0.0.*"
 jsonschema = "3.2.0"
-altair_saver = "*"
+altair_saver = "0.5.0"
 vega_datasets = "*"
 selenium = "<=4.2"
 pytest = "*"
 syrupy = "4.0.0"
 nodejs = "18.*"
+vl-convert-python = ">=1.0.0"
 
 [pypi-dependencies]
 altair_upset = { path = ".", editable = true }
