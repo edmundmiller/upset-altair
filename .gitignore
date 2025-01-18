@@ -1,0 +1,16 @@
+.DS_Store
+.idea
+*.log
+tmp/
+
+*.py[cod]
+*.egg
+build
+htmlcov
+*.egg-info/
+/.ipynb_checkpoints/
+/.coverage
+tests/debug/
+# pixi environments
+.pixi
+*.egg-info
