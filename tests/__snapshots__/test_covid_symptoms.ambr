@@ -1,0 +1,5251 @@
+# serializer version: 1
+# name: test_upset_by_degree
+  dict({
+    '$schema': 'https://vega.github.io/schema/vega-lite/v4.json',
+    'config': dict({
+      'axis': dict({
+        'labelFontSize': 14,
+        'labelFontWeight': 300,
+        'titleFontSize': 16,
+        'titleFontWeight': 400,
+        'titlePadding': 10,
+      }),
+      'concat': dict({
+        'spacing': 0,
+      }),
+      'legend': dict({
+        'labelFontSize': 14,
+        'labelFontWeight': 300,
+        'orient': 'top',
+        'padding': 20,
+        'symbolSize': 500.0,
+        'symbolType': 'circle',
+        'titleFontSize': 16,
+        'titleFontWeight': 400,
+      }),
+      'title': dict({
+        'anchor': 'start',
+        'fontSize': 18,
+        'fontWeight': 400,
+        'subtitlePadding': 10,
+      }),
+      'view': dict({
+        'continuousHeight': 300,
+        'continuousWidth': 400,
+        'stroke': None,
+      }),
+    }),
+    'spacing': 20,
+    'title': dict({
+      'fontSize': 20,
+      'fontWeight': 500,
+      'subtitle': list([
+        'Story & Data: https://www.nature.com/articles/d41586-020-00154-w',
+        'Altair-based UpSet Plot: https://github.com/hms-dbmi/upset-altair-notebook',
+      ]),
+      'subtitleColor': '#3A3A3A',
+      'subtitleFontSize': 14,
+      'text': 'Symptoms Reported by Users of the COVID Symptom Tracker App',
+    }),
+    'vconcat': list([
+      dict({
+        'hconcat': list([
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'field': 'set',
+                'scale': dict({
+                  'domain': list([
+                    'Shortness of Breath',
+                    'Diarrhea',
+                    'Fever',
+                    'Cough',
+                    'Anosmia',
+                    'Fatigue',
+                  ]),
+                  'range': list([
+                    '#55A8DB',
+                    '#3070B5',
+                    '#30363F',
+                    '#F1AD60',
+                    '#DF6234',
+                    '#BDC6CA',
+                  ]),
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'opacity': dict({
+                'value': 1,
+              }),
+              'x': dict({
+                'aggregate': 'sum',
+                'axis': dict({
+                  'grid': False,
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Set Size',
+                'type': 'quantitative',
+              }),
+              'y': dict({
+                'axis': dict({
+                  'domain': False,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'set_order',
+                'title': None,
+                'type': 'nominal',
+              }),
+            }),
+            'mark': dict({
+              'size': 20,
+              'type': 'bar',
+            }),
+            'selection': dict({
+              'selector028': dict({
+                'bind': 'legend',
+                'fields': list([
+                  'set',
+                ]),
+                'type': 'multi',
+              }),
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': "(datum['is_intersect'] === 1)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector029',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector030',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 300,
+          }),
+          dict({
+            'layer': list([
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector010': 'selector005',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#EA4667',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 200,
+                  'type': 'circle',
+                }),
+                'selection': dict({
+                  'selector008': dict({
+                    'bind': 'legend',
+                    'fields': list([
+                      'set',
+                    ]),
+                    'type': 'multi',
+                  }),
+                  'selector009': dict({
+                    'fields': list([
+                      'intersection_id',
+                    ]),
+                    'on': 'mouseover',
+                    'type': 'single',
+                  }),
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector011',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector012',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector017': 'selector005',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#EA4667',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': True,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'aggregate': 'min',
+                    'field': 'set_order',
+                    'type': 'nominal',
+                  }),
+                  'y2': dict({
+                    'aggregate': 'max',
+                    'field': 'set_order',
+                  }),
+                }),
+                'height': 420.0,
+                'mark': dict({
+                  'color': '#3A3A3A',
+                  'size': 2,
+                  'type': 'bar',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector018',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector019',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector020': 'selector005',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#EA4667',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 200,
+                  'type': 'circle',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector021',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector022',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': '#E6E6E6',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 200,
+                  'type': 'circle',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector015',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector016',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': '#F7F7F7',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': 'rect',
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "((datum['set_order'] % 2) === 1)",
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector013',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector014',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+            ]),
+          }),
+          dict({
+            'layer': list([
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'field': 'set',
+                    'scale': dict({
+                      'domain': list([
+                        'Shortness of Breath',
+                        'Diarrhea',
+                        'Fever',
+                        'Cough',
+                        'Anosmia',
+                        'Fatigue',
+                      ]),
+                      'range': list([
+                        '#55A8DB',
+                        '#3070B5',
+                        '#30363F',
+                        '#F1AD60',
+                        '#DF6234',
+                        '#BDC6CA',
+                      ]),
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'opacity': dict({
+                    'value': 1,
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'mark': dict({
+                  'size': 1000,
+                  'type': 'circle',
+                }),
+                'selection': dict({
+                  'selector023': dict({
+                    'bind': 'legend',
+                    'fields': list([
+                      'set',
+                    ]),
+                    'type': 'multi',
+                  }),
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector024',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector025',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': 'white',
+                  }),
+                  'opacity': dict({
+                    'value': 1,
+                  }),
+                  'text': dict({
+                    'field': 'set_abbre',
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'mark': dict({
+                  'align': 'center',
+                  'type': 'text',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector026',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector027',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+              }),
+            ]),
+          }),
+        ]),
+        'resolve': dict({
+          'scale': dict({
+            'y': 'shared',
+          }),
+        }),
+        'spacing': 5,
+      }),
+      dict({
+        'layer': list([
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'condition': dict({
+                  'selection': dict({
+                    'selector002': 'selector005',
+                  }),
+                  'value': '#3A3A3A',
+                }),
+                'value': '#EA4667',
+              }),
+              'tooltip': list([
+                dict({
+                  'aggregate': 'max',
+                  'field': 'count',
+                  'title': 'Cardinality',
+                  'type': 'quantitative',
+                }),
+                dict({
+                  'field': 'degree',
+                  'title': 'Degree',
+                  'type': 'quantitative',
+                }),
+              ]),
+              'x': dict({
+                'axis': dict({
+                  'domain': True,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'intersection_id',
+                'sort': dict({
+                  'field': 'degree',
+                  'order': 'ascending',
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'y': dict({
+                'aggregate': 'max',
+                'axis': dict({
+                  'grid': False,
+                  'orient': 'right',
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Intersection Size',
+                'type': 'quantitative',
+              }),
+            }),
+            'height': 420.0,
+            'mark': dict({
+              'color': '#3A3A3A',
+              'size': 17.5,
+              'type': 'bar',
+            }),
+            'selection': dict({
+              'selector000': dict({
+                'bind': 'legend',
+                'fields': list([
+                  'set',
+                ]),
+                'type': 'multi',
+              }),
+              'selector001': dict({
+                'fields': list([
+                  'intersection_id',
+                ]),
+                'on': 'mouseover',
+                'type': 'single',
+              }),
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector003',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector004',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 900,
+          }),
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'condition': dict({
+                  'selection': dict({
+                    'selector005': 'selector005',
+                  }),
+                  'value': '#3A3A3A',
+                }),
+                'value': '#EA4667',
+              }),
+              'text': dict({
+                'field': 'count',
+                'format': '.0f',
+                'type': 'quantitative',
+              }),
+              'tooltip': list([
+                dict({
+                  'aggregate': 'max',
+                  'field': 'count',
+                  'title': 'Cardinality',
+                  'type': 'quantitative',
+                }),
+                dict({
+                  'field': 'degree',
+                  'title': 'Degree',
+                  'type': 'quantitative',
+                }),
+              ]),
+              'x': dict({
+                'axis': dict({
+                  'domain': True,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'intersection_id',
+                'sort': dict({
+                  'field': 'degree',
+                  'order': 'ascending',
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'y': dict({
+                'aggregate': 'max',
+                'axis': dict({
+                  'grid': False,
+                  'orient': 'right',
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Intersection Size',
+                'type': 'quantitative',
+              }),
+            }),
+            'height': 420.0,
+            'mark': dict({
+              'color': '#3A3A3A',
+              'dy': -10,
+              'size': 16,
+              'type': 'text',
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector006',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector007',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 900,
+          }),
+        ]),
+      }),
+    ]),
+  })
+# ---
+# name: test_upset_by_degree_custom
+  dict({
+    '$schema': 'https://vega.github.io/schema/vega-lite/v4.json',
+    'config': dict({
+      'axis': dict({
+        'labelFontSize': 14,
+        'labelFontWeight': 300,
+        'titleFontSize': 16,
+        'titleFontWeight': 400,
+        'titlePadding': 10,
+      }),
+      'concat': dict({
+        'spacing': 0,
+      }),
+      'legend': dict({
+        'labelFontSize': 14,
+        'labelFontWeight': 300,
+        'orient': 'top',
+        'padding': 20,
+        'symbolSize': 500.0,
+        'symbolType': 'circle',
+        'titleFontSize': 16,
+        'titleFontWeight': 400,
+      }),
+      'title': dict({
+        'anchor': 'start',
+        'fontSize': 18,
+        'fontWeight': 400,
+        'subtitlePadding': 10,
+      }),
+      'view': dict({
+        'continuousHeight': 300,
+        'continuousWidth': 400,
+        'stroke': None,
+      }),
+    }),
+    'spacing': 20,
+    'title': dict({
+      'fontSize': 20,
+      'fontWeight': 500,
+      'subtitle': list([
+        'Story & Data: https://www.nature.com/articles/d41586-020-00154-w',
+        'Altair-based UpSet Plot: https://github.com/hms-dbmi/upset-altair-notebook',
+      ]),
+      'subtitleColor': '#3A3A3A',
+      'subtitleFontSize': 14,
+      'text': 'Symptoms Reported by Users of the COVID Symptom Tracker App',
+    }),
+    'vconcat': list([
+      dict({
+        'hconcat': list([
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'field': 'set',
+                'scale': dict({
+                  'domain': list([
+                    'Shortness of Breath',
+                    'Diarrhea',
+                    'Fever',
+                    'Cough',
+                    'Anosmia',
+                    'Fatigue',
+                  ]),
+                  'range': list([
+                    '#F0E442',
+                    '#E69F00',
+                    '#D55E00',
+                    '#CC79A7',
+                    '#0072B2',
+                    '#56B4E9',
+                  ]),
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'opacity': dict({
+                'value': 1,
+              }),
+              'x': dict({
+                'aggregate': 'sum',
+                'axis': dict({
+                  'grid': False,
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Set Size',
+                'type': 'quantitative',
+              }),
+              'y': dict({
+                'axis': dict({
+                  'domain': False,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'set_order',
+                'title': None,
+                'type': 'nominal',
+              }),
+            }),
+            'mark': dict({
+              'size': 16,
+              'type': 'bar',
+            }),
+            'selection': dict({
+              'selector028': dict({
+                'bind': 'legend',
+                'fields': list([
+                  'set',
+                ]),
+                'type': 'multi',
+              }),
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': "(datum['is_intersect'] === 1)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector029',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector030',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 200,
+          }),
+          dict({
+            'layer': list([
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector010': 'selector008',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#777',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 175.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 100,
+                  'type': 'circle',
+                }),
+                'selection': dict({
+                  'selector008': dict({
+                    'bind': 'legend',
+                    'fields': list([
+                      'set',
+                    ]),
+                    'type': 'multi',
+                  }),
+                  'selector009': dict({
+                    'fields': list([
+                      'intersection_id',
+                    ]),
+                    'on': 'mouseover',
+                    'type': 'single',
+                  }),
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector011',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector012',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 700,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector017': 'selector008',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#777',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': True,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'aggregate': 'min',
+                    'field': 'set_order',
+                    'type': 'nominal',
+                  }),
+                  'y2': dict({
+                    'aggregate': 'max',
+                    'field': 'set_order',
+                  }),
+                }),
+                'height': 325.0,
+                'mark': dict({
+                  'color': '#3A3A3A',
+                  'size': 1,
+                  'type': 'bar',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector018',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector019',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 700,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector020': 'selector008',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#777',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 175.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 100,
+                  'type': 'circle',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector021',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector022',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 700,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': '#E6E6E6',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 175.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 100,
+                  'type': 'circle',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector015',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector016',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 700,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': '#F7F7F7',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'degree',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 175.0,
+                'mark': 'rect',
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "((datum['set_order'] % 2) === 1)",
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector013',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector014',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 700,
+              }),
+            ]),
+          }),
+          dict({
+            'layer': list([
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'field': 'set',
+                    'scale': dict({
+                      'domain': list([
+                        'Shortness of Breath',
+                        'Diarrhea',
+                        'Fever',
+                        'Cough',
+                        'Anosmia',
+                        'Fatigue',
+                      ]),
+                      'range': list([
+                        '#F0E442',
+                        '#E69F00',
+                        '#D55E00',
+                        '#CC79A7',
+                        '#0072B2',
+                        '#56B4E9',
+                      ]),
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'opacity': dict({
+                    'value': 1,
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'mark': dict({
+                  'size': 650,
+                  'type': 'circle',
+                }),
+                'selection': dict({
+                  'selector023': dict({
+                    'bind': 'legend',
+                    'fields': list([
+                      'set',
+                    ]),
+                    'type': 'multi',
+                  }),
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector024',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector025',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': 'white',
+                  }),
+                  'opacity': dict({
+                    'value': 1,
+                  }),
+                  'text': dict({
+                    'field': 'set_abbre',
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'mark': dict({
+                  'align': 'center',
+                  'type': 'text',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector026',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector027',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+              }),
+            ]),
+          }),
+        ]),
+        'resolve': dict({
+          'scale': dict({
+            'y': 'shared',
+          }),
+        }),
+        'spacing': 5,
+      }),
+      dict({
+        'layer': list([
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'condition': dict({
+                  'selection': dict({
+                    'selector002': 'selector008',
+                  }),
+                  'value': '#3A3A3A',
+                }),
+                'value': '#777',
+              }),
+              'tooltip': list([
+                dict({
+                  'aggregate': 'max',
+                  'field': 'count',
+                  'title': 'Cardinality',
+                  'type': 'quantitative',
+                }),
+                dict({
+                  'field': 'degree',
+                  'title': 'Degree',
+                  'type': 'quantitative',
+                }),
+              ]),
+              'x': dict({
+                'axis': dict({
+                  'domain': True,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'intersection_id',
+                'sort': dict({
+                  'field': 'degree',
+                  'order': 'ascending',
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'y': dict({
+                'aggregate': 'max',
+                'axis': dict({
+                  'grid': False,
+                  'orient': 'right',
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Intersection Size',
+                'type': 'quantitative',
+              }),
+            }),
+            'height': 325.0,
+            'mark': dict({
+              'color': '#3A3A3A',
+              'size': 14.125,
+              'type': 'bar',
+            }),
+            'selection': dict({
+              'selector000': dict({
+                'bind': 'legend',
+                'fields': list([
+                  'set',
+                ]),
+                'type': 'multi',
+              }),
+              'selector001': dict({
+                'fields': list([
+                  'intersection_id',
+                ]),
+                'on': 'mouseover',
+                'type': 'single',
+              }),
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector003',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector004',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 700,
+          }),
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'condition': dict({
+                  'selection': dict({
+                    'selector005': 'selector008',
+                  }),
+                  'value': '#3A3A3A',
+                }),
+                'value': '#777',
+              }),
+              'text': dict({
+                'field': 'count',
+                'format': '.0f',
+                'type': 'quantitative',
+              }),
+              'tooltip': list([
+                dict({
+                  'aggregate': 'max',
+                  'field': 'count',
+                  'title': 'Cardinality',
+                  'type': 'quantitative',
+                }),
+                dict({
+                  'field': 'degree',
+                  'title': 'Degree',
+                  'type': 'quantitative',
+                }),
+              ]),
+              'x': dict({
+                'axis': dict({
+                  'domain': True,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'intersection_id',
+                'sort': dict({
+                  'field': 'degree',
+                  'order': 'ascending',
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'y': dict({
+                'aggregate': 'max',
+                'axis': dict({
+                  'grid': False,
+                  'orient': 'right',
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Intersection Size',
+                'type': 'quantitative',
+              }),
+            }),
+            'height': 325.0,
+            'mark': dict({
+              'color': '#3A3A3A',
+              'dy': -10,
+              'size': 12,
+              'type': 'text',
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector006',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector007',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 700,
+          }),
+        ]),
+      }),
+    ]),
+  })
+# ---
+# name: test_upset_by_frequency
+  dict({
+    '$schema': 'https://vega.github.io/schema/vega-lite/v4.json',
+    'config': dict({
+      'axis': dict({
+        'labelFontSize': 14,
+        'labelFontWeight': 300,
+        'titleFontSize': 16,
+        'titleFontWeight': 400,
+        'titlePadding': 10,
+      }),
+      'concat': dict({
+        'spacing': 0,
+      }),
+      'legend': dict({
+        'labelFontSize': 14,
+        'labelFontWeight': 300,
+        'orient': 'top',
+        'padding': 20,
+        'symbolSize': 500.0,
+        'symbolType': 'circle',
+        'titleFontSize': 16,
+        'titleFontWeight': 400,
+      }),
+      'title': dict({
+        'anchor': 'start',
+        'fontSize': 18,
+        'fontWeight': 400,
+        'subtitlePadding': 10,
+      }),
+      'view': dict({
+        'continuousHeight': 300,
+        'continuousWidth': 400,
+        'stroke': None,
+      }),
+    }),
+    'spacing': 20,
+    'title': dict({
+      'fontSize': 20,
+      'fontWeight': 500,
+      'subtitle': list([
+        'Story & Data: https://www.nature.com/articles/d41586-020-00154-w',
+        'Altair-based UpSet Plot: https://github.com/hms-dbmi/upset-altair-notebook',
+      ]),
+      'subtitleColor': '#3A3A3A',
+      'subtitleFontSize': 14,
+      'text': 'Symptoms Reported by Users of the COVID Symptom Tracker App',
+    }),
+    'vconcat': list([
+      dict({
+        'hconcat': list([
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'field': 'set',
+                'scale': dict({
+                  'domain': list([
+                    'Shortness of Breath',
+                    'Diarrhea',
+                    'Fever',
+                    'Cough',
+                    'Anosmia',
+                    'Fatigue',
+                  ]),
+                  'range': list([
+                    '#55A8DB',
+                    '#3070B5',
+                    '#30363F',
+                    '#F1AD60',
+                    '#DF6234',
+                    '#BDC6CA',
+                  ]),
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'opacity': dict({
+                'value': 1,
+              }),
+              'x': dict({
+                'aggregate': 'sum',
+                'axis': dict({
+                  'grid': False,
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Set Size',
+                'type': 'quantitative',
+              }),
+              'y': dict({
+                'axis': dict({
+                  'domain': False,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'set_order',
+                'title': None,
+                'type': 'nominal',
+              }),
+            }),
+            'mark': dict({
+              'size': 20,
+              'type': 'bar',
+            }),
+            'selection': dict({
+              'selector028': dict({
+                'bind': 'legend',
+                'fields': list([
+                  'set',
+                ]),
+                'type': 'multi',
+              }),
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': "(datum['is_intersect'] === 1)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector029',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector030',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 300,
+          }),
+          dict({
+            'layer': list([
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector010': 'selector002',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#EA4667',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'count',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 200,
+                  'type': 'circle',
+                }),
+                'selection': dict({
+                  'selector008': dict({
+                    'bind': 'legend',
+                    'fields': list([
+                      'set',
+                    ]),
+                    'type': 'multi',
+                  }),
+                  'selector009': dict({
+                    'fields': list([
+                      'intersection_id',
+                    ]),
+                    'on': 'mouseover',
+                    'type': 'single',
+                  }),
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector011',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector012',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector017': 'selector002',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#EA4667',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': True,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'count',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'aggregate': 'min',
+                    'field': 'set_order',
+                    'type': 'nominal',
+                  }),
+                  'y2': dict({
+                    'aggregate': 'max',
+                    'field': 'set_order',
+                  }),
+                }),
+                'height': 420.0,
+                'mark': dict({
+                  'color': '#3A3A3A',
+                  'size': 2,
+                  'type': 'bar',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector018',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector019',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'condition': dict({
+                      'selection': dict({
+                        'selector020': 'selector002',
+                      }),
+                      'value': '#3A3A3A',
+                    }),
+                    'value': '#EA4667',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'count',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 200,
+                  'type': 'circle',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': "(datum['is_intersect'] === 1)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector021',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector022',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': '#E6E6E6',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'count',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': dict({
+                  'opacity': 1,
+                  'size': 200,
+                  'type': 'circle',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector015',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector016',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': '#F7F7F7',
+                  }),
+                  'tooltip': list([
+                    dict({
+                      'aggregate': 'max',
+                      'field': 'count',
+                      'title': 'Cardinality',
+                      'type': 'quantitative',
+                    }),
+                    dict({
+                      'field': 'degree',
+                      'title': 'Degree',
+                      'type': 'quantitative',
+                    }),
+                  ]),
+                  'x': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'intersection_id',
+                    'sort': dict({
+                      'field': 'count',
+                      'order': 'ascending',
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'height': 280.0,
+                'mark': 'rect',
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "((datum['set_order'] % 2) === 1)",
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector013',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector014',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+                'width': 900,
+              }),
+            ]),
+          }),
+          dict({
+            'layer': list([
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'field': 'set',
+                    'scale': dict({
+                      'domain': list([
+                        'Shortness of Breath',
+                        'Diarrhea',
+                        'Fever',
+                        'Cough',
+                        'Anosmia',
+                        'Fatigue',
+                      ]),
+                      'range': list([
+                        '#55A8DB',
+                        '#3070B5',
+                        '#30363F',
+                        '#F1AD60',
+                        '#DF6234',
+                        '#BDC6CA',
+                      ]),
+                    }),
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                  'opacity': dict({
+                    'value': 1,
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'mark': dict({
+                  'size': 1000,
+                  'type': 'circle',
+                }),
+                'selection': dict({
+                  'selector023': dict({
+                    'bind': 'legend',
+                    'fields': list([
+                      'set',
+                    ]),
+                    'type': 'multi',
+                  }),
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector024',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector025',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+              }),
+              dict({
+                'encoding': dict({
+                  'color': dict({
+                    'value': 'white',
+                  }),
+                  'opacity': dict({
+                    'value': 1,
+                  }),
+                  'text': dict({
+                    'field': 'set_abbre',
+                    'type': 'nominal',
+                  }),
+                  'y': dict({
+                    'axis': dict({
+                      'domain': False,
+                      'grid': False,
+                      'labels': False,
+                      'ticks': False,
+                    }),
+                    'field': 'set_order',
+                    'title': None,
+                    'type': 'nominal',
+                  }),
+                }),
+                'mark': dict({
+                  'align': 'center',
+                  'type': 'text',
+                }),
+                'transform': list([
+                  dict({
+                    'aggregate': list([
+                      dict({
+                        'as': 'count',
+                        'field': 'count',
+                        'op': 'sum',
+                      }),
+                    ]),
+                    'groupby': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'as': 'degree',
+                    'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+                  }),
+                  dict({
+                    'as': list([
+                      'set',
+                      'is_intersect',
+                    ]),
+                    'fold': list([
+                      'Shortness of Breath',
+                      'Diarrhea',
+                      'Fever',
+                      'Cough',
+                      'Anosmia',
+                      'Fatigue',
+                    ]),
+                  }),
+                  dict({
+                    'filter': "(datum['degree'] !== 0)",
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector026',
+                    }),
+                  }),
+                  dict({
+                    'filter': dict({
+                      'selection': 'selector027',
+                    }),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      0,
+                    ]),
+                    'sort': list([
+                      dict({
+                        'field': 'set_order',
+                      }),
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'set_order',
+                        'field': 'set',
+                        'op': 'distinct',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'frame': list([
+                      None,
+                      None,
+                    ]),
+                    'window': list([
+                      dict({
+                        'as': 'intersection_id',
+                        'field': '',
+                        'op': 'row_number',
+                      }),
+                    ]),
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_abbre',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'from': dict({
+                      'fields': list([
+                        'set_order',
+                      ]),
+                      'key': 'set',
+                    }),
+                    'lookup': 'set',
+                  }),
+                  dict({
+                    'groupby': list([
+                      'intersection_id',
+                      'count',
+                    ]),
+                    'op': 'max',
+                    'pivot': 'set',
+                    'value': 'is_intersect',
+                  }),
+                ]),
+              }),
+            ]),
+          }),
+        ]),
+        'resolve': dict({
+          'scale': dict({
+            'y': 'shared',
+          }),
+        }),
+        'spacing': 5,
+      }),
+      dict({
+        'layer': list([
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'condition': dict({
+                  'selection': dict({
+                    'selector002': 'selector002',
+                  }),
+                  'value': '#3A3A3A',
+                }),
+                'value': '#EA4667',
+              }),
+              'tooltip': list([
+                dict({
+                  'aggregate': 'max',
+                  'field': 'count',
+                  'title': 'Cardinality',
+                  'type': 'quantitative',
+                }),
+                dict({
+                  'field': 'degree',
+                  'title': 'Degree',
+                  'type': 'quantitative',
+                }),
+              ]),
+              'x': dict({
+                'axis': dict({
+                  'domain': True,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'intersection_id',
+                'sort': dict({
+                  'field': 'count',
+                  'order': 'ascending',
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'y': dict({
+                'aggregate': 'max',
+                'axis': dict({
+                  'grid': False,
+                  'orient': 'right',
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Intersection Size',
+                'type': 'quantitative',
+              }),
+            }),
+            'height': 420.0,
+            'mark': dict({
+              'color': '#3A3A3A',
+              'size': 17.5,
+              'type': 'bar',
+            }),
+            'selection': dict({
+              'selector000': dict({
+                'bind': 'legend',
+                'fields': list([
+                  'set',
+                ]),
+                'type': 'multi',
+              }),
+              'selector001': dict({
+                'fields': list([
+                  'intersection_id',
+                ]),
+                'on': 'mouseover',
+                'type': 'single',
+              }),
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector003',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector004',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 900,
+          }),
+          dict({
+            'encoding': dict({
+              'color': dict({
+                'condition': dict({
+                  'selection': dict({
+                    'selector005': 'selector002',
+                  }),
+                  'value': '#3A3A3A',
+                }),
+                'value': '#EA4667',
+              }),
+              'text': dict({
+                'field': 'count',
+                'format': '.0f',
+                'type': 'quantitative',
+              }),
+              'tooltip': list([
+                dict({
+                  'aggregate': 'max',
+                  'field': 'count',
+                  'title': 'Cardinality',
+                  'type': 'quantitative',
+                }),
+                dict({
+                  'field': 'degree',
+                  'title': 'Degree',
+                  'type': 'quantitative',
+                }),
+              ]),
+              'x': dict({
+                'axis': dict({
+                  'domain': True,
+                  'grid': False,
+                  'labels': False,
+                  'ticks': False,
+                }),
+                'field': 'intersection_id',
+                'sort': dict({
+                  'field': 'count',
+                  'order': 'ascending',
+                }),
+                'title': None,
+                'type': 'nominal',
+              }),
+              'y': dict({
+                'aggregate': 'max',
+                'axis': dict({
+                  'grid': False,
+                  'orient': 'right',
+                  'tickCount': 3,
+                }),
+                'field': 'count',
+                'title': 'Intersection Size',
+                'type': 'quantitative',
+              }),
+            }),
+            'height': 420.0,
+            'mark': dict({
+              'color': '#3A3A3A',
+              'dy': -10,
+              'size': 16,
+              'type': 'text',
+            }),
+            'transform': list([
+              dict({
+                'aggregate': list([
+                  dict({
+                    'as': 'count',
+                    'field': 'count',
+                    'op': 'sum',
+                  }),
+                ]),
+                'groupby': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'as': 'degree',
+                'calculate': "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)",
+              }),
+              dict({
+                'as': list([
+                  'set',
+                  'is_intersect',
+                ]),
+                'fold': list([
+                  'Shortness of Breath',
+                  'Diarrhea',
+                  'Fever',
+                  'Cough',
+                  'Anosmia',
+                  'Fatigue',
+                ]),
+              }),
+              dict({
+                'filter': "(datum['degree'] !== 0)",
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector006',
+                }),
+              }),
+              dict({
+                'filter': dict({
+                  'selection': 'selector007',
+                }),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  0,
+                ]),
+                'sort': list([
+                  dict({
+                    'field': 'set_order',
+                  }),
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'set_order',
+                    'field': 'set',
+                    'op': 'distinct',
+                  }),
+                ]),
+              }),
+              dict({
+                'frame': list([
+                  None,
+                  None,
+                ]),
+                'window': list([
+                  dict({
+                    'as': 'intersection_id',
+                    'field': '',
+                    'op': 'row_number',
+                  }),
+                ]),
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_abbre',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'from': dict({
+                  'fields': list([
+                    'set_order',
+                  ]),
+                  'key': 'set',
+                }),
+                'lookup': 'set',
+              }),
+              dict({
+                'groupby': list([
+                  'intersection_id',
+                  'count',
+                ]),
+                'op': 'max',
+                'pivot': 'set',
+                'value': 'is_intersect',
+              }),
+            ]),
+            'width': 900,
+          }),
+        ]),
+      }),
+    ]),
+  })
+# ---
