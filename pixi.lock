@@ -183,12 +183,10 @@ packages:
 - pypi: .
   name: altair-upset
   version: 0.1.0
-  sha256: af33061307a8f58436dd525669ecabd39ae463e8fb095d329cdfe513d4bbc65b
+  sha256: 8fd20454cc39cd981832d3c698b5ed20737de89dc789fb716cf48db3330b5edd
   requires_dist:
   - altair>=4.0.0,<5.0.0
   - pandas>=1.0.0
-  - pytest>=7.0.0 ; extra == 'test'
-  - altair-saver>=0.5.0 ; extra == 'test'
   requires_python: '>=3.8'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/altair_data_server-0.4.1-py_0.tar.bz2
