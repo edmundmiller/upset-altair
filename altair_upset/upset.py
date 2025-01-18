@@ -46,9 +46,9 @@ def UpSetAltair(
     )
 
     # Setup selections
-    legend_selection = alt.selection_multi(fields=["set"], bind="legend")
-    color_selection = alt.selection_single(fields=["intersection_id"], on="mouseover")
-    opacity_selection = alt.selection_single(fields=["intersection_id"])
+    legend_selection = alt.selection_point(fields=["set"], bind="legend")
+    color_selection = alt.selection_point(fields=["intersection_id"], on="mouseover")
+    opacity_selection = alt.selection_point(fields=["intersection_id"])
 
     # Calculate dimensions
     vertical_bar_chart_height = height * height_ratio
@@ -91,8 +91,10 @@ def UpSetAltair(
         tooltip,
         vertical_bar_label_size,
     )
-    vertical_bar_chart = (vertical_bar + vertical_bar_text).add_selection(
-        color_selection
+    vertical_bar_chart = (
+        (vertical_bar + vertical_bar_text)
+        .add_params(color_selection)
+        .properties(width=width)
     )
 
     circle_bg, rect_bg, circle, line_connection = create_matrix_view(
@@ -105,8 +107,10 @@ def UpSetAltair(
         main_color,
     )
     matrix_view = (
-        circle + rect_bg + circle_bg + line_connection + circle
-    ).add_selection(color_selection)
+        (circle + rect_bg + circle_bg + line_connection + circle)
+        .add_params(color_selection)
+        .properties(width=matrix_width, height=matrix_height)
+    )
 
     horizontal_bar_label_bg, horizontal_bar_label, horizontal_bar = (
         create_horizontal_bar(
@@ -124,19 +128,19 @@ def UpSetAltair(
         (horizontal_bar_label_bg + horizontal_bar_label)
         if is_show_horizontal_bar_label_bg
         else horizontal_bar_label
-    )
+    ).properties(width=horizontal_bar_chart_width)
 
     # Combine components
     upsetaltair = alt.vconcat(
-        vertical_bar_chart,
+        vertical_bar_chart.properties(height=vertical_bar_chart_height),
         alt.hconcat(
             matrix_view,
             horizontal_bar_axis,
-            horizontal_bar,
+            horizontal_bar.properties(width=horizontal_bar_chart_width),
             spacing=5,
         ).resolve_scale(y="shared"),
         spacing=20,
-    ).add_selection(legend_selection)
+    ).add_params(legend_selection)
 
     # Apply configuration
     upsetaltair = upsetaltair_top_level_configuration(

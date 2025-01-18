@@ -1,7 +1,6 @@
 import json
 import pytest
 from pathlib import Path
-import vl_convert as vlc
 import pandas as pd
 import altair as alt
 
@@ -211,10 +210,8 @@ def covid_mutations_data():
 
 
 def save_chart(filename, chart):
-    """Save an Altair chart to PNG using vl-convert-python"""
-    png_data = vlc.vegalite_to_png(chart.to_dict())
-    with open(filename, "wb") as f:
-        f.write(png_data)
+    """Save an Altair chart to PNG using Altair's built-in saving capabilities"""
+    chart.save(filename)
 
 
 def normalize_spec(spec):
