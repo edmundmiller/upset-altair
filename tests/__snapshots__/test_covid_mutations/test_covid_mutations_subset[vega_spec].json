@@ -228,7 +228,7 @@
                 "color": {
                   "condition": {
                     "selection": {
-                      "selector002": "selector005"
+                      "selector000": "selector005"
                     },
                     "value": "#3A3A3A"
                   },
@@ -412,7 +412,7 @@
                 "color": {
                   "condition": {
                     "selection": {
-                      "selector002": "selector005"
+                      "selector000": "selector005"
                     },
                     "value": "#3A3A3A"
                   },
@@ -580,7 +580,7 @@
                 "color": {
                   "condition": {
                     "selection": {
-                      "selector002": "selector005"
+                      "selector000": "selector005"
                     },
                     "value": "#3A3A3A"
                   },
@@ -1373,7 +1373,7 @@
             "color": {
               "condition": {
                 "selection": {
-                  "selector002": "selector005"
+                  "selector000": "selector005"
                 },
                 "value": "#3A3A3A"
               },
@@ -1544,7 +1544,7 @@
             "color": {
               "condition": {
                 "selection": {
-                  "selector002": "selector005"
+                  "selector000": "selector005"
                 },
                 "value": "#3A3A3A"
               },
