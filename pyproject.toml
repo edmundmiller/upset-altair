@@ -8,16 +8,16 @@ authors = [
     {name = "Edmund Miller", email = "git@edmundmiller.dev"}
 ]
 dependencies = [
-    "altair==4.0.0",
-    "pandas==1.4.1",
+    "altair>=5.0.0",
+    "pandas>=1.4.1",
 ]
 
 [dependency-groups]
 test = [
     "pytest",
-    "syrupy==4.0.0",
+    "syrupy>=4.0.0",
     "vl-convert-python>=1.0.0",
-    "jsonschema==3.2.0"
+    "jsonschema>=3.2.0"
 ]
 
 [tool.pytest.ini_options]
