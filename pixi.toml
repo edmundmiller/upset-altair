@@ -22,6 +22,7 @@ altair_saver = "*"
 vega_datasets = "*"
 selenium = "<=4.2"
 pytest = "*"
+syrupy = "4.0.0"
 nodejs = "18.*"
 
 [pypi-dependencies]

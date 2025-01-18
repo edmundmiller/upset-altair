@@ -29,6 +29,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/cffi-1.17.1-py310hfce808e_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.4.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/colorama-0.4.6-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/colored-1.4.4-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/comm-0.2.2-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/debugpy-1.8.11-py310h6954a95_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/decorator-5.1.1-pyhd8ed1ab_1.conda
@@ -117,7 +118,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/pyobjc-framework-cocoa-11.0-py310hae5a141_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/pyrsistent-0.20.0-py310h837254d_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pysocks-1.7.1-pyha55dd90_7.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/pytest-8.3.4-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/pytest-7.4.4-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/python-3.10.2-hea1dfa3_4_cpython.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/python-dateutil-2.9.0.post0-pyhff2d567_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.21.1-pyhd8ed1ab_0.conda
@@ -138,6 +139,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.5-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/sqlite-3.48.0-h2e4c9dc_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/stack_data-0.6.3-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/syrupy-4.0.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/terminado-0.18.1-pyh31c8845_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tinycss2-1.4.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/tk-8.6.13-h1abcd95_1.conda
@@ -188,7 +190,7 @@ packages:
 - pypi: .
   name: altair-upset
   version: 0.1.0
-  sha256: 8fd20454cc39cd981832d3c698b5ed20737de89dc789fb716cf48db3330b5edd
+  sha256: c74cdfee0e939e72a5d5c702745d4e70a5543108eb4b94b66d89c0e44fe50320
   requires_dist:
   - altair>=4.0.0,<5.0.0
   - pandas>=1.0.0
@@ -448,6 +450,17 @@ packages:
   - pkg:pypi/colorama?source=hash-mapping
   size: 27011
   timestamp: 1733218222191
+- conda: https://conda.anaconda.org/conda-forge/noarch/colored-1.4.4-pyhd8ed1ab_0.conda
+  sha256: 18a1ff961c9015b674212044d5d63f7510279e6880a5626ef2af32d0abf4cc18
+  md5: 46762cf2ddf6a1498eec36167d719fcc
+  depends:
+  - python >=3.6
+  license: MIT
+  license_family: MIT
+  purls:
+  - pkg:pypi/colored?source=hash-mapping
+  size: 17727
+  timestamp: 1673785683100
 - conda: https://conda.anaconda.org/conda-forge/noarch/comm-0.2.2-pyhd8ed1ab_1.conda
   sha256: 7e87ef7c91574d9fac19faedaaee328a70f718c9b4ddadfdc0ba9ac021bd64af
   md5: 74673132601ec2b7fc592755605f4c1b
@@ -1051,8 +1064,6 @@ packages:
   depends:
   - __osx >=10.13
   - liblzma 5.6.3 hd471939_1
-  arch: x86_64
-  platform: osx
   license: 0BSD
   purls: []
   size: 113085
@@ -1407,8 +1418,6 @@ packages:
   - python-dateutil >=2.7.3
   - python_abi 3.10.* *_cp310
   - pytz >=2017.2
-  arch: x86_64
-  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   purls:
@@ -1639,25 +1648,25 @@ packages:
   - pkg:pypi/pysocks?source=hash-mapping
   size: 21085
   timestamp: 1733217331982
-- conda: https://conda.anaconda.org/conda-forge/noarch/pytest-8.3.4-pyhd8ed1ab_1.conda
-  sha256: 75245ca9d0cbd6d38bb45ec02430189a9d4c21c055c5259739d738a2298d61b3
-  md5: 799ed216dc6af62520f32aa39bc1c2bb
+- conda: https://conda.anaconda.org/conda-forge/noarch/pytest-7.4.4-pyhd8ed1ab_0.conda
+  sha256: 8979721b7f86b183d21103f3ec2734783847d317c1b754f462f407efc7c60886
+  md5: a9d145de8c5f064b5fa68fb34725d9f4
   depends:
   - colorama
   - exceptiongroup >=1.0.0rc8
   - iniconfig
   - packaging
-  - pluggy <2,>=1.5
-  - python >=3.9
-  - tomli >=1
+  - pluggy >=0.12,<2.0
+  - python >=3.7
+  - tomli >=1.0.0
   constrains:
   - pytest-faulthandler >=2
   license: MIT
   license_family: MIT
   purls:
   - pkg:pypi/pytest?source=hash-mapping
-  size: 259195
-  timestamp: 1733217599806
+  size: 244564
+  timestamp: 1704035308916
 - conda: https://conda.anaconda.org/conda-forge/osx-64/python-3.10.2-hea1dfa3_4_cpython.tar.bz2
   build_number: 4
   sha256: 302a81157afcb46d5bb8dd9252e66aebd18f20cc1f028de823fb0505fcc6e79e
@@ -1675,8 +1684,6 @@ packages:
   - xz >=5.2.5,<6.0.0a0
   constrains:
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: osx
   license: Python-2.0
   purls: []
   size: 13235204
@@ -1896,8 +1903,6 @@ packages:
   - libzlib >=1.3.1,<2.0a0
   - ncurses >=6.5,<7.0a0
   - readline >=8.2,<9.0a0
-  arch: x86_64
-  platform: osx
   license: Unlicense
   purls: []
   size: 941548
@@ -1916,6 +1921,19 @@ packages:
   - pkg:pypi/stack-data?source=hash-mapping
   size: 26988
   timestamp: 1733569565672
+- conda: https://conda.anaconda.org/conda-forge/noarch/syrupy-4.0.0-pyhd8ed1ab_0.conda
+  sha256: e63b71c71dfcaf558f8bf6557115a208a1d755d3e22959602c219fa237c9f0d2
+  md5: d42278fe8437d0ea29387064a9b97c7b
+  depends:
+  - colored >=1.3.92,<2.0.0
+  - pytest >=7.0.0,<8.0.0
+  - python >=3.8.1,<4.0
+  license: Apache-2.0
+  license_family: APACHE
+  purls:
+  - pkg:pypi/syrupy?source=hash-mapping
+  size: 39548
+  timestamp: 1675453489115
 - conda: https://conda.anaconda.org/conda-forge/noarch/terminado-0.18.1-pyh31c8845_0.conda
   sha256: 4daae56fc8da17784578fbdd064f17e3b3076b394730a14119e571707568dc8a
   md5: 00b54981b923f5aefcd5e8547de056d5
@@ -2139,8 +2157,6 @@ packages:
   - liblzma-devel 5.6.3 hd471939_1
   - xz-gpl-tools 5.6.3 h357f2ed_1
   - xz-tools 5.6.3 hd471939_1
-  arch: x86_64
-  platform: osx
   license: 0BSD AND LGPL-2.1-or-later AND GPL-2.0-or-later
   purls: []
   size: 23640
@@ -2151,8 +2167,6 @@ packages:
   depends:
   - __osx >=10.13
   - liblzma 5.6.3 hd471939_1
-  arch: x86_64
-  platform: osx
   license: 0BSD AND LGPL-2.1-or-later AND GPL-2.0-or-later
   purls: []
   size: 33298
@@ -2163,8 +2177,6 @@ packages:
   depends:
   - __osx >=10.13
   - liblzma 5.6.3 hd471939_1
-  arch: x86_64
-  platform: osx
   license: 0BSD AND LGPL-2.1-or-later
   purls: []
   size: 80968

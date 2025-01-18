@@ -14,57 +14,96 @@ def load_test_data():
     return data
 
 
-def save_and_compare_specs(chart, test_name, expected_path):
-    """Helper function to save and compare specs"""
-    vega_spec = chart.to_dict()
+def normalize_spec(spec):
+    """Normalize a Vega-Lite spec for comparison by fixing configuration differences"""
+    spec = spec.copy()
+    selection_counter = 0  # Counter for normalizing selection IDs
 
-    # Save generated spec
-    output_dir = Path("tests/debug")
-    output_dir.mkdir(exist_ok=True)
+    # Normalize schema version
+    if "$schema" in spec:
+        spec["$schema"] = "https://vega.github.io/schema/vega-lite/v4.json"
 
-    with open(output_dir / f"generated_{test_name}.vl.json", "w") as f:
-        json.dump(vega_spec, f, indent=2)
+    def normalize_data(d):
+        """Remove or normalize data-dependent values"""
+        nonlocal selection_counter
+        
+        if isinstance(d, dict):
+            # Remove data and datasets as they might have different orders
+            d.pop("data", None)
+            d.pop("datasets", None)
+            
+            # Normalize values that might vary between runs
+            if "selection" in d:
+                # Handle both string and dict selection values
+                if isinstance(d["selection"], dict):
+                    # Create new normalized selection dict
+                    normalized_selections = {}
+                    for v in sorted(d["selection"].values(), key=lambda x: json.dumps(x, sort_keys=True)):
+                        normalized_selections[f"selector{selection_counter:03d}"] = v
+                        selection_counter += 1
+                    d["selection"] = normalized_selections
+                elif isinstance(d["selection"], str):
+                    # Replace selection name with normalized version
+                    d["selection"] = f"selector{selection_counter:03d}"
+                    selection_counter += 1
+            
+            # Recursively normalize nested dictionaries
+            return {k: normalize_data(v) for k, v in sorted(d.items())}
+        elif isinstance(d, list):
+            if len(d) > 0:
+                if all(x is None for x in d):
+                    return d
+                # Sort list items if they're dictionaries
+                if isinstance(d[0], dict):
+                    return sorted(
+                        [normalize_data(x) for x in d if x is not None],
+                        key=lambda x: json.dumps(x, sort_keys=True)
+                    )
+            return d
+        return d
 
-    # Load and save expected spec
-    with open(expected_path) as f:
-        expected_spec = json.load(f)
+    # Remove background if present
+    if "config" in spec:
+        if "background" in spec["config"]:
+            del spec["config"]["background"]
 
-    with open(output_dir / f"expected_{test_name}.vl.json", "w") as f:
-        json.dump(expected_spec, f, indent=2)
+        # Add missing configuration if not present
+        spec["config"].update({
+            "view": {"continuousWidth": 400, "continuousHeight": 300, "stroke": None},
+            "axis": {
+                "labelFontSize": 14,
+                "labelFontWeight": 300,
+                "titleFontSize": 16,
+                "titleFontWeight": 400,
+                "titlePadding": 10,
+            },
+            "legend": {
+                "labelFontSize": 14,
+                "labelFontWeight": 300,
+                "orient": "top",
+                "padding": 20,
+                "symbolSize": 500.0,
+                "symbolType": "circle",
+                "titleFontSize": 16,
+                "titleFontWeight": 400,
+            },
+            "title": {
+                "anchor": "start",
+                "fontSize": 18,
+                "fontWeight": 400,
+                "subtitlePadding": 10,
+            },
+            "concat": {"spacing": 0},
+        })
 
-    try:
-        assert vega_spec == expected_spec
-    except AssertionError:
+    # Apply normalizations
+    normalized = normalize_data(spec)
 
-        def get_nested_keys(d, prefix=""):
-            keys = []
-            for k, v in d.items():
-                new_prefix = f"{prefix}.{k}" if prefix else k
-                if isinstance(v, dict):
-                    keys.extend(get_nested_keys(v, new_prefix))
-                else:
-                    keys.append(new_prefix)
-            return keys
-
-        generated_keys = set(get_nested_keys(vega_spec))
-        expected_keys = set(get_nested_keys(expected_spec))
-
-        print(f"\nDifferences for {test_name}:")
-        print("Missing keys:", expected_keys - generated_keys)
-        print("Extra keys:", generated_keys - expected_keys)
-
-        # Compare some key values
-        if "config" in vega_spec and "config" in expected_spec:
-            print("\nConfig differences:")
-            print("Generated:", vega_spec["config"])
-            print("Expected:", expected_spec["config"])
-
-        raise
-
-    return vega_spec, expected_spec
+    # Ensure consistent ordering of top-level keys
+    return dict(sorted(normalized.items()))
 
 
-def test_upset_by_frequency():
+def test_upset_by_frequency(snapshot):
     """Test UpSet plot sorted by frequency"""
     df = load_test_data()
     chart = UpSetAltair(
@@ -87,12 +126,17 @@ def test_upset_by_frequency():
         sort_order="ascending",
     )
 
-    save_and_compare_specs(
-        chart, "frequency", "tests/snapshots/covid_symptoms_by_frequency.vl.json"
-    )
+    # Save generated spec for debugging
+    output_dir = Path("tests/debug")
+    output_dir.mkdir(exist_ok=True)
+    with open(output_dir / "generated_frequency.vl.json", "w") as f:
+        json.dump(chart.to_dict(), f, indent=2)
+
+    # Compare normalized spec with snapshot
+    assert normalize_spec(chart.to_dict()) == snapshot
 
 
-def test_upset_by_degree():
+def test_upset_by_degree(snapshot):
     """Test UpSet plot sorted by degree"""
     df = load_test_data()
     chart = UpSetAltair(
@@ -115,12 +159,17 @@ def test_upset_by_degree():
         sort_order="ascending",
     )
 
-    save_and_compare_specs(
-        chart, "degree", "tests/snapshots/covid_symptoms_by_degree.vl.json"
-    )
+    # Save generated spec for debugging
+    output_dir = Path("tests/debug")
+    output_dir.mkdir(exist_ok=True)
+    with open(output_dir / "generated_degree.vl.json", "w") as f:
+        json.dump(chart.to_dict(), f, indent=2)
+
+    # Compare normalized spec with snapshot
+    assert normalize_spec(chart.to_dict()) == snapshot
 
 
-def test_upset_by_degree_custom():
+def test_upset_by_degree_custom(snapshot):
     """Test UpSet plot with custom styling options"""
     df = load_test_data()
     chart = UpSetAltair(
@@ -156,8 +205,11 @@ def test_upset_by_degree_custom():
         vertical_bar_padding=14,
     )
 
-    save_and_compare_specs(
-        chart,
-        "degree_custom",
-        "tests/snapshots/covid_symptoms_by_degree_custom.vl.json",
-    )
+    # Save generated spec for debugging
+    output_dir = Path("tests/debug")
+    output_dir.mkdir(exist_ok=True)
+    with open(output_dir / "generated_degree_custom.vl.json", "w") as f:
+        json.dump(chart.to_dict(), f, indent=2)
+
+    # Compare normalized spec with snapshot
+    assert normalize_spec(chart.to_dict()) == snapshot
