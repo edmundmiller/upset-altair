@@ -102,7 +102,7 @@
             "type": "bar"
           },
           "selection": {
-            "selector028": {
+            "selector000": {
               "bind": "legend",
               "fields": [
                 "set"
@@ -152,12 +152,12 @@
             },
             {
               "filter": {
-                "selection": "selector029"
+                "selection": "selector000"
               }
             },
             {
               "filter": {
-                "selection": "selector030"
+                "selection": "selector000"
               }
             },
             {
@@ -228,7 +228,7 @@
                 "color": {
                   "condition": {
                     "selection": {
-                      "selector010": "selector005"
+                      "selector002": "selector005"
                     },
                     "value": "#3A3A3A"
                   },
@@ -281,14 +281,14 @@
                 "type": "circle"
               },
               "selection": {
-                "selector008": {
+                "selector000": {
                   "bind": "legend",
                   "fields": [
                     "set"
                   ],
                   "type": "multi"
                 },
-                "selector009": {
+                "selector001": {
                   "fields": [
                     "intersection_id"
                   ],
@@ -338,12 +338,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector011"
+                    "selection": "selector000"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector012"
+                    "selection": "selector000"
                   }
                 },
                 {
@@ -412,7 +412,175 @@
                 "color": {
                   "condition": {
                     "selection": {
-                      "selector017": "selector005"
+                      "selector002": "selector005"
+                    },
+                    "value": "#3A3A3A"
+                  },
+                  "value": "#EA4667"
+                },
+                "tooltip": [
+                  {
+                    "aggregate": "max",
+                    "field": "count",
+                    "title": "Cardinality",
+                    "type": "quantitative"
+                  },
+                  {
+                    "field": "degree",
+                    "title": "Degree",
+                    "type": "quantitative"
+                  }
+                ],
+                "x": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "intersection_id",
+                  "sort": {
+                    "field": "count",
+                    "order": "ascending"
+                  },
+                  "title": null,
+                  "type": "nominal"
+                },
+                "y": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "set_order",
+                  "title": null,
+                  "type": "nominal"
+                }
+              },
+              "height": 280.0,
+              "mark": {
+                "opacity": 1,
+                "size": 200,
+                "type": "circle"
+              },
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Alpha",
+                    "Beta",
+                    "Gamma",
+                    "Delta",
+                    "Omicron"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Alpha']) ? datum['Alpha'] : 0)+(isDefined(datum['Beta']) ? datum['Beta'] : 0)+(isDefined(datum['Gamma']) ? datum['Gamma'] : 0)+(isDefined(datum['Delta']) ? datum['Delta'] : 0)+(isDefined(datum['Omicron']) ? datum['Omicron'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Alpha",
+                    "Beta",
+                    "Gamma",
+                    "Delta",
+                    "Omicron"
+                  ]
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": "(datum['is_intersect'] === 1)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector000"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector000"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ],
+              "width": 900
+            },
+            {
+              "encoding": {
+                "color": {
+                  "condition": {
+                    "selection": {
+                      "selector002": "selector005"
                     },
                     "value": "#3A3A3A"
                   },
@@ -504,180 +672,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector018"
+                    "selection": "selector000"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector019"
-                  }
-                },
-                {
-                  "frame": [
-                    null,
-                    0
-                  ],
-                  "sort": [
-                    {
-                      "field": "set_order"
-                    }
-                  ],
-                  "window": [
-                    {
-                      "as": "set_order",
-                      "field": "set",
-                      "op": "distinct"
-                    }
-                  ]
-                },
-                {
-                  "frame": [
-                    null,
-                    null
-                  ],
-                  "window": [
-                    {
-                      "as": "intersection_id",
-                      "field": "",
-                      "op": "row_number"
-                    }
-                  ]
-                },
-                {
-                  "from": {
-                    "fields": [
-                      "set_abbre"
-                    ],
-                    "key": "set"
-                  },
-                  "lookup": "set"
-                },
-                {
-                  "from": {
-                    "fields": [
-                      "set_order"
-                    ],
-                    "key": "set"
-                  },
-                  "lookup": "set"
-                },
-                {
-                  "groupby": [
-                    "intersection_id",
-                    "count"
-                  ],
-                  "op": "max",
-                  "pivot": "set",
-                  "value": "is_intersect"
-                }
-              ],
-              "width": 900
-            },
-            {
-              "encoding": {
-                "color": {
-                  "condition": {
-                    "selection": {
-                      "selector020": "selector005"
-                    },
-                    "value": "#3A3A3A"
-                  },
-                  "value": "#EA4667"
-                },
-                "tooltip": [
-                  {
-                    "aggregate": "max",
-                    "field": "count",
-                    "title": "Cardinality",
-                    "type": "quantitative"
-                  },
-                  {
-                    "field": "degree",
-                    "title": "Degree",
-                    "type": "quantitative"
-                  }
-                ],
-                "x": {
-                  "axis": {
-                    "domain": false,
-                    "grid": false,
-                    "labels": false,
-                    "ticks": false
-                  },
-                  "field": "intersection_id",
-                  "sort": {
-                    "field": "count",
-                    "order": "ascending"
-                  },
-                  "title": null,
-                  "type": "nominal"
-                },
-                "y": {
-                  "axis": {
-                    "domain": false,
-                    "grid": false,
-                    "labels": false,
-                    "ticks": false
-                  },
-                  "field": "set_order",
-                  "title": null,
-                  "type": "nominal"
-                }
-              },
-              "height": 280.0,
-              "mark": {
-                "opacity": 1,
-                "size": 200,
-                "type": "circle"
-              },
-              "transform": [
-                {
-                  "aggregate": [
-                    {
-                      "as": "count",
-                      "field": "count",
-                      "op": "sum"
-                    }
-                  ],
-                  "groupby": [
-                    "Alpha",
-                    "Beta",
-                    "Gamma",
-                    "Delta",
-                    "Omicron"
-                  ]
-                },
-                {
-                  "as": "degree",
-                  "calculate": "(isDefined(datum['Alpha']) ? datum['Alpha'] : 0)+(isDefined(datum['Beta']) ? datum['Beta'] : 0)+(isDefined(datum['Gamma']) ? datum['Gamma'] : 0)+(isDefined(datum['Delta']) ? datum['Delta'] : 0)+(isDefined(datum['Omicron']) ? datum['Omicron'] : 0)"
-                },
-                {
-                  "as": [
-                    "set",
-                    "is_intersect"
-                  ],
-                  "fold": [
-                    "Alpha",
-                    "Beta",
-                    "Gamma",
-                    "Delta",
-                    "Omicron"
-                  ]
-                },
-                {
-                  "filter": "(datum['degree'] !== 0)"
-                },
-                {
-                  "filter": "(datum['is_intersect'] === 1)"
-                },
-                {
-                  "filter": {
-                    "selection": "selector021"
-                  }
-                },
-                {
-                  "filter": {
-                    "selection": "selector022"
+                    "selection": "selector000"
                   }
                 },
                 {
@@ -831,12 +831,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector015"
+                    "selection": "selector000"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector016"
+                    "selection": "selector000"
                   }
                 },
                 {
@@ -989,12 +989,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector013"
+                    "selection": "selector000"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector014"
+                    "selection": "selector000"
                   }
                 },
                 {
@@ -1106,7 +1106,7 @@
                 "type": "circle"
               },
               "selection": {
-                "selector023": {
+                "selector000": {
                   "bind": "legend",
                   "fields": [
                     "set"
@@ -1153,12 +1153,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector024"
+                    "selection": "selector000"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector025"
+                    "selection": "selector000"
                   }
                 },
                 {
@@ -1288,12 +1288,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector026"
+                    "selection": "selector000"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector027"
+                    "selection": "selector000"
                   }
                 },
                 {
@@ -1368,6 +1368,177 @@
     },
     {
       "layer": [
+        {
+          "encoding": {
+            "color": {
+              "condition": {
+                "selection": {
+                  "selector002": "selector005"
+                },
+                "value": "#3A3A3A"
+              },
+              "value": "#EA4667"
+            },
+            "text": {
+              "field": "count",
+              "format": ".0f",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "aggregate": "max",
+                "field": "count",
+                "title": "Cardinality",
+                "type": "quantitative"
+              },
+              {
+                "field": "degree",
+                "title": "Degree",
+                "type": "quantitative"
+              }
+            ],
+            "x": {
+              "axis": {
+                "domain": true,
+                "grid": false,
+                "labels": false,
+                "ticks": false
+              },
+              "field": "intersection_id",
+              "sort": {
+                "field": "count",
+                "order": "ascending"
+              },
+              "title": null,
+              "type": "nominal"
+            },
+            "y": {
+              "aggregate": "max",
+              "axis": {
+                "grid": false,
+                "orient": "right",
+                "tickCount": 3
+              },
+              "field": "count",
+              "title": "Intersection Size",
+              "type": "quantitative"
+            }
+          },
+          "height": 420.0,
+          "mark": {
+            "color": "#3A3A3A",
+            "dy": -10,
+            "size": 16,
+            "type": "text"
+          },
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "as": "count",
+                  "field": "count",
+                  "op": "sum"
+                }
+              ],
+              "groupby": [
+                "Alpha",
+                "Beta",
+                "Gamma",
+                "Delta",
+                "Omicron"
+              ]
+            },
+            {
+              "as": "degree",
+              "calculate": "(isDefined(datum['Alpha']) ? datum['Alpha'] : 0)+(isDefined(datum['Beta']) ? datum['Beta'] : 0)+(isDefined(datum['Gamma']) ? datum['Gamma'] : 0)+(isDefined(datum['Delta']) ? datum['Delta'] : 0)+(isDefined(datum['Omicron']) ? datum['Omicron'] : 0)"
+            },
+            {
+              "as": [
+                "set",
+                "is_intersect"
+              ],
+              "fold": [
+                "Alpha",
+                "Beta",
+                "Gamma",
+                "Delta",
+                "Omicron"
+              ]
+            },
+            {
+              "filter": "(datum['degree'] !== 0)"
+            },
+            {
+              "filter": {
+                "selection": "selector000"
+              }
+            },
+            {
+              "filter": {
+                "selection": "selector000"
+              }
+            },
+            {
+              "frame": [
+                null,
+                0
+              ],
+              "sort": [
+                {
+                  "field": "set_order"
+                }
+              ],
+              "window": [
+                {
+                  "as": "set_order",
+                  "field": "set",
+                  "op": "distinct"
+                }
+              ]
+            },
+            {
+              "frame": [
+                null,
+                null
+              ],
+              "window": [
+                {
+                  "as": "intersection_id",
+                  "field": "",
+                  "op": "row_number"
+                }
+              ]
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_abbre"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_order"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "groupby": [
+                "intersection_id",
+                "count"
+              ],
+              "op": "max",
+              "pivot": "set",
+              "value": "is_intersect"
+            }
+          ],
+          "width": 900
+        },
         {
           "encoding": {
             "color": {
@@ -1480,183 +1651,12 @@
             },
             {
               "filter": {
-                "selection": "selector003"
+                "selection": "selector000"
               }
             },
             {
               "filter": {
-                "selection": "selector004"
-              }
-            },
-            {
-              "frame": [
-                null,
-                0
-              ],
-              "sort": [
-                {
-                  "field": "set_order"
-                }
-              ],
-              "window": [
-                {
-                  "as": "set_order",
-                  "field": "set",
-                  "op": "distinct"
-                }
-              ]
-            },
-            {
-              "frame": [
-                null,
-                null
-              ],
-              "window": [
-                {
-                  "as": "intersection_id",
-                  "field": "",
-                  "op": "row_number"
-                }
-              ]
-            },
-            {
-              "from": {
-                "fields": [
-                  "set_abbre"
-                ],
-                "key": "set"
-              },
-              "lookup": "set"
-            },
-            {
-              "from": {
-                "fields": [
-                  "set_order"
-                ],
-                "key": "set"
-              },
-              "lookup": "set"
-            },
-            {
-              "groupby": [
-                "intersection_id",
-                "count"
-              ],
-              "op": "max",
-              "pivot": "set",
-              "value": "is_intersect"
-            }
-          ],
-          "width": 900
-        },
-        {
-          "encoding": {
-            "color": {
-              "condition": {
-                "selection": {
-                  "selector005": "selector005"
-                },
-                "value": "#3A3A3A"
-              },
-              "value": "#EA4667"
-            },
-            "text": {
-              "field": "count",
-              "format": ".0f",
-              "type": "quantitative"
-            },
-            "tooltip": [
-              {
-                "aggregate": "max",
-                "field": "count",
-                "title": "Cardinality",
-                "type": "quantitative"
-              },
-              {
-                "field": "degree",
-                "title": "Degree",
-                "type": "quantitative"
-              }
-            ],
-            "x": {
-              "axis": {
-                "domain": true,
-                "grid": false,
-                "labels": false,
-                "ticks": false
-              },
-              "field": "intersection_id",
-              "sort": {
-                "field": "count",
-                "order": "ascending"
-              },
-              "title": null,
-              "type": "nominal"
-            },
-            "y": {
-              "aggregate": "max",
-              "axis": {
-                "grid": false,
-                "orient": "right",
-                "tickCount": 3
-              },
-              "field": "count",
-              "title": "Intersection Size",
-              "type": "quantitative"
-            }
-          },
-          "height": 420.0,
-          "mark": {
-            "color": "#3A3A3A",
-            "dy": -10,
-            "size": 16,
-            "type": "text"
-          },
-          "transform": [
-            {
-              "aggregate": [
-                {
-                  "as": "count",
-                  "field": "count",
-                  "op": "sum"
-                }
-              ],
-              "groupby": [
-                "Alpha",
-                "Beta",
-                "Gamma",
-                "Delta",
-                "Omicron"
-              ]
-            },
-            {
-              "as": "degree",
-              "calculate": "(isDefined(datum['Alpha']) ? datum['Alpha'] : 0)+(isDefined(datum['Beta']) ? datum['Beta'] : 0)+(isDefined(datum['Gamma']) ? datum['Gamma'] : 0)+(isDefined(datum['Delta']) ? datum['Delta'] : 0)+(isDefined(datum['Omicron']) ? datum['Omicron'] : 0)"
-            },
-            {
-              "as": [
-                "set",
-                "is_intersect"
-              ],
-              "fold": [
-                "Alpha",
-                "Beta",
-                "Gamma",
-                "Delta",
-                "Omicron"
-              ]
-            },
-            {
-              "filter": "(datum['degree'] !== 0)"
-            },
-            {
-              "filter": {
-                "selection": "selector006"
-              }
-            },
-            {
-              "filter": {
-                "selection": "selector007"
+                "selection": "selector000"
               }
             },
             {
