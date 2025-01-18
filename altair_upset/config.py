@@ -1,5 +1,6 @@
 import altair as alt
 
+
 def upsetaltair_top_level_configuration(
     base, legend_orient="top-left", legend_symbol_size=30
 ):
@@ -26,4 +27,4 @@ def upsetaltair_top_level_configuration(
             symbolSize=legend_symbol_size,
         )
         .configure_concat(spacing=0)
-    ) 
+    )
