@@ -14,57 +14,28 @@ def load_test_data():
     return data
 
 
-# Top-level altair configuration
-def upsetaltair_top_level_configuration(
-    base, legend_orient="top-left", legend_symbol_size=30
-):
-    return (
-        base.configure_view(stroke=None)
-        .configure_title(
-            fontSize=18, fontWeight=400, anchor="start", subtitlePadding=10
-        )
-        .configure_axis(
-            labelFontSize=14,
-            labelFontWeight=300,
-            titleFontSize=16,
-            titleFontWeight=400,
-            titlePadding=10,
-        )
-        .configure_legend(
-            titleFontSize=16,
-            titleFontWeight=400,
-            labelFontSize=14,
-            labelFontWeight=300,
-            padding=20,
-            orient=legend_orient,
-            symbolType="circle",
-            symbolSize=legend_symbol_size,
-        )
-        .configure_concat(spacing=0)
-    )
-
-
 def save_and_compare_specs(chart, test_name, expected_path):
     """Helper function to save and compare specs"""
     vega_spec = chart.to_dict()
-    
+
     # Save generated spec
     output_dir = Path("tests/debug")
     output_dir.mkdir(exist_ok=True)
-    
+
     with open(output_dir / f"generated_{test_name}.vl.json", "w") as f:
         json.dump(vega_spec, f, indent=2)
 
     # Load and save expected spec
     with open(expected_path) as f:
         expected_spec = json.load(f)
-    
+
     with open(output_dir / f"expected_{test_name}.vl.json", "w") as f:
         json.dump(expected_spec, f, indent=2)
 
     try:
         assert vega_spec == expected_spec
     except AssertionError:
+
         def get_nested_keys(d, prefix=""):
             keys = []
             for k, v in d.items():
@@ -81,13 +52,13 @@ def save_and_compare_specs(chart, test_name, expected_path):
         print(f"\nDifferences for {test_name}:")
         print("Missing keys:", expected_keys - generated_keys)
         print("Extra keys:", generated_keys - expected_keys)
-        
+
         # Compare some key values
-        if 'config' in vega_spec and 'config' in expected_spec:
+        if "config" in vega_spec and "config" in expected_spec:
             print("\nConfig differences:")
-            print("Generated:", vega_spec['config'])
-            print("Expected:", expected_spec['config'])
-        
+            print("Generated:", vega_spec["config"])
+            print("Expected:", expected_spec["config"])
+
         raise
 
     return vega_spec, expected_spec
@@ -115,11 +86,9 @@ def test_upset_by_frequency():
         sort_by="frequency",
         sort_order="ascending",
     )
-    
+
     save_and_compare_specs(
-        chart,
-        "frequency",
-        "tests/snapshots/covid_symptoms_by_frequency.vl.json"
+        chart, "frequency", "tests/snapshots/covid_symptoms_by_frequency.vl.json"
     )
 
 
@@ -147,9 +116,7 @@ def test_upset_by_degree():
     )
 
     save_and_compare_specs(
-        chart,
-        "degree",
-        "tests/snapshots/covid_symptoms_by_degree.vl.json"
+        chart, "degree", "tests/snapshots/covid_symptoms_by_degree.vl.json"
     )
 
 
@@ -192,5 +159,5 @@ def test_upset_by_degree_custom():
     save_and_compare_specs(
         chart,
         "degree_custom",
-        "tests/snapshots/covid_symptoms_by_degree_custom.vl.json"
+        "tests/snapshots/covid_symptoms_by_degree_custom.vl.json",
     )
