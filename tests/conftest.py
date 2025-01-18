@@ -3,6 +3,7 @@ import pytest
 from pathlib import Path
 import vl_convert as vlc
 import pandas as pd
+import altair as alt
 
 
 @pytest.fixture
@@ -296,3 +297,37 @@ def normalize_spec(spec):
 
     normalized = normalize_data(spec)
     return dict(sorted(normalized.items()))
+
+
+@pytest.fixture
+def sample_data():
+    """Create sample dataset for testing."""
+    return pd.DataFrame({
+        'set1': [1, 0, 1, 1, 0],
+        'set2': [1, 1, 0, 1, 0],
+        'set3': [0, 1, 1, 1, 0]
+    })
+
+
+@pytest.fixture
+def sample_sets():
+    """List of set names."""
+    return ['set1', 'set2', 'set3']
+
+
+@pytest.fixture
+def sample_abbreviations():
+    """List of set abbreviations."""
+    return ['S1', 'S2', 'S3']
+
+
+@pytest.fixture
+def base_chart():
+    """Basic Altair chart for component testing."""
+    return alt.Chart().mark_point()
+
+
+@pytest.fixture
+def legend_selection():
+    """Legend selection for testing."""
+    return alt.selection_multi(fields=["set"], bind="legend")
