@@ -69,12 +69,44 @@ def test_upset_by_frequency():
 
     # Convert to Vega-Lite spec
     vega_spec = chart.to_dict()
+    
+    # Save generated spec for visualization
+    output_dir = Path("tests/debug")
+    output_dir.mkdir(exist_ok=True)
+    
+    with open(output_dir / "generated_frequency.vl.json", "w") as f:
+        json.dump(vega_spec, f, indent=2)
 
     # Load expected spec
     with open("tests/snapshots/covid_symptoms_by_frequency.vl.json") as f:
         expected_spec = json.load(f)
+        
+    # Save expected spec for easier comparison
+    with open(output_dir / "expected_frequency.vl.json", "w") as f:
+        json.dump(expected_spec, f, indent=2)
 
-    assert vega_spec == expected_spec
+    try:
+        assert vega_spec == expected_spec
+    except AssertionError:
+        # Print key differences
+        def get_nested_keys(d, prefix=""):
+            keys = []
+            for k, v in d.items():
+                new_prefix = f"{prefix}.{k}" if prefix else k
+                if isinstance(v, dict):
+                    keys.extend(get_nested_keys(v, new_prefix))
+                else:
+                    keys.append(new_prefix)
+            return keys
+
+        generated_keys = set(get_nested_keys(vega_spec))
+        expected_keys = set(get_nested_keys(expected_spec))
+
+        print("\nMissing keys in generated spec:", expected_keys - generated_keys)
+        print("\nExtra keys in generated spec:", generated_keys - expected_keys)
+        
+        # Re-raise the assertion error
+        raise
 
 
 def test_upset_by_degree():
