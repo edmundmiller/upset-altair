@@ -325,4 +325,4 @@ def base_chart():
 @pytest.fixture
 def legend_selection():
     """Legend selection for testing."""
-    return alt.selection_multi(fields=["set"], bind="legend")
+    return alt.selection_point(fields=["set"], bind="legend")
