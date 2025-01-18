@@ -302,23 +302,21 @@ def normalize_spec(spec):
 @pytest.fixture
 def sample_data():
     """Create sample dataset for testing."""
-    return pd.DataFrame({
-        'set1': [1, 0, 1, 1, 0],
-        'set2': [1, 1, 0, 1, 0],
-        'set3': [0, 1, 1, 1, 0]
-    })
+    return pd.DataFrame(
+        {"set1": [1, 0, 1, 1, 0], "set2": [1, 1, 0, 1, 0], "set3": [0, 1, 1, 1, 0]}
+    )
 
 
 @pytest.fixture
 def sample_sets():
     """List of set names."""
-    return ['set1', 'set2', 'set3']
+    return ["set1", "set2", "set3"]
 
 
 @pytest.fixture
 def sample_abbreviations():
     """List of set abbreviations."""
-    return ['S1', 'S2', 'S3']
+    return ["S1", "S2", "S3"]
 
 
 @pytest.fixture
