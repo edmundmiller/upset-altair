@@ -26,7 +26,74 @@ def UpSetAltair(
     vertical_bar_label_size=16,
     vertical_bar_padding=20,
 ):
-    """Generate Altair-based interactive UpSet plots."""
+    """Generate interactive UpSet plots using Altair.
+
+    UpSet plots are used to visualize set intersections in a more scalable way than Venn diagrams.
+    This implementation provides interactive features like hover highlighting and legend filtering.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        Input data where each column represents a set and contains binary values (0 or 1)
+    title : str, default ""
+        Title of the plot
+    subtitle : str or list of str, default ""
+        Subtitle(s) of the plot
+    sets : list of str
+        Names of the sets to visualize (must correspond to column names in data)
+    abbre : list of str, optional
+        Abbreviations for set names (must have same length as sets)
+    sort_by : {"frequency", "degree"}, default "frequency"
+        Method to sort the intersections:
+        - "frequency": sort by intersection size
+        - "degree": sort by number of sets in intersection
+    sort_order : {"ascending", "descending"}, default "ascending"
+        Order of sorting for intersections
+    width : int, default 1200
+        Total width of the plot in pixels
+    height : int, default 700
+        Total height of the plot in pixels
+    height_ratio : float, default 0.6
+        Ratio of vertical bar chart height to total height (between 0 and 1)
+    horizontal_bar_chart_width : int, default 300
+        Width of the horizontal bar chart in pixels
+    color_range : list of str
+        List of colors for the sets
+    highlight_color : str, default "#EA4667"
+        Color used for highlighting on hover
+    glyph_size : int, default 200
+        Size of the matrix glyphs in pixels
+    set_label_bg_size : int, default 1000
+        Size of the set label background circles
+    line_connection_size : int, default 2
+        Thickness of connecting lines in pixels
+    horizontal_bar_size : int, default 20
+        Height of horizontal bars in pixels
+    vertical_bar_label_size : int, default 16
+        Font size of vertical bar labels
+    vertical_bar_padding : int, default 20
+        Padding between vertical bars
+
+    Returns
+    -------
+    altair.vegalite.v4.api.Chart
+        An Altair chart object representing the UpSet plot
+
+    Examples
+    --------
+    >>> import altair_upset as au
+    >>> import pandas as pd
+    >>> data = pd.DataFrame({
+    ...     'set1': [1, 0, 1],
+    ...     'set2': [1, 1, 0],
+    ...     'set3': [0, 1, 1]
+    ... })
+    >>> chart = au.UpSetAltair(
+    ...     data=data,
+    ...     title="Sample UpSet Plot",
+    ...     sets=["set1", "set2", "set3"]
+    ... )
+    """
     # Input validation
     if (data is None) or (sets is None):
         print("No data and/or a list of sets are provided")
