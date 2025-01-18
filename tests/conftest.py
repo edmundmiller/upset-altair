@@ -229,17 +229,22 @@ def normalize_spec(spec):
             # Remove data and datasets as they might have different orders
             d.pop("data", None)
             d.pop("datasets", None)
-            
+
             # For selections, we only care about the values, not the specific IDs
             if "selection" in d:
                 if isinstance(d["selection"], dict):
                     # Sort selection values and assign sequential IDs
-                    values = sorted(d["selection"].values(), key=lambda x: json.dumps(x, sort_keys=True))
-                    d["selection"] = {f"selector{i:03d}": v for i, v in enumerate(values)}
+                    values = sorted(
+                        d["selection"].values(),
+                        key=lambda x: json.dumps(x, sort_keys=True),
+                    )
+                    d["selection"] = {
+                        f"selector{i:03d}": v for i, v in enumerate(values)
+                    }
                 # For string selections, just normalize to a fixed value
                 elif isinstance(d["selection"], str):
                     d["selection"] = "selector000"
-            
+
             return {k: normalize_data(v) for k, v in sorted(d.items())}
         elif isinstance(d, list):
             if len(d) > 0 and not all(x is None for x in d):
@@ -255,33 +260,39 @@ def normalize_spec(spec):
         if "background" in spec["config"]:
             del spec["config"]["background"]
 
-        spec["config"].update({
-            "view": {"continuousWidth": 400, "continuousHeight": 300, "stroke": None},
-            "axis": {
-                "labelFontSize": 14,
-                "labelFontWeight": 300,
-                "titleFontSize": 16,
-                "titleFontWeight": 400,
-                "titlePadding": 10,
-            },
-            "legend": {
-                "labelFontSize": 14,
-                "labelFontWeight": 300,
-                "orient": "top",
-                "padding": 20,
-                "symbolSize": 500.0,
-                "symbolType": "circle",
-                "titleFontSize": 16,
-                "titleFontWeight": 400,
-            },
-            "title": {
-                "anchor": "start",
-                "fontSize": 18,
-                "fontWeight": 400,
-                "subtitlePadding": 10,
-            },
-            "concat": {"spacing": 0},
-        })
+        spec["config"].update(
+            {
+                "view": {
+                    "continuousWidth": 400,
+                    "continuousHeight": 300,
+                    "stroke": None,
+                },
+                "axis": {
+                    "labelFontSize": 14,
+                    "labelFontWeight": 300,
+                    "titleFontSize": 16,
+                    "titleFontWeight": 400,
+                    "titlePadding": 10,
+                },
+                "legend": {
+                    "labelFontSize": 14,
+                    "labelFontWeight": 300,
+                    "orient": "top",
+                    "padding": 20,
+                    "symbolSize": 500.0,
+                    "symbolType": "circle",
+                    "titleFontSize": 16,
+                    "titleFontWeight": 400,
+                },
+                "title": {
+                    "anchor": "start",
+                    "fontSize": 18,
+                    "fontWeight": 400,
+                    "subtitlePadding": 10,
+                },
+                "concat": {"spacing": 0},
+            }
+        )
 
     normalized = normalize_data(spec)
     return dict(sorted(normalized.items()))

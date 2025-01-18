@@ -1,6 +1,9 @@
-import pandas as pd
 import altair as alt
+from .preprocessing import preprocess_data
+from .transforms import create_base_chart
+from .components import create_vertical_bar, create_matrix_view, create_horizontal_bar
 from .config import upsetaltair_top_level_configuration
+
 
 def UpSetAltair(
     data=None,
@@ -23,6 +26,8 @@ def UpSetAltair(
     vertical_bar_label_size=16,
     vertical_bar_padding=20,
 ):
+    """Generate Altair-based interactive UpSet plots."""
+    # Input validation
     if (data is None) or (sets is None):
         print("No data and/or a list of sets are provided")
         return
@@ -35,69 +40,34 @@ def UpSetAltair(
             "Dropping the `abbre` list because the lengths of `sets` and `abbre` are not identical."
         )
 
-    """
-    Data Preprocessing
-    """
-    data["count"] = 0
-    data = data[sets + ["count"]]
-    data = data.groupby(sets).count().reset_index()
-
-    data["intersection_id"] = data.index
-    data["degree"] = data[sets].sum(axis=1)
-    data = data.sort_values(
-        by=["count"], ascending=True if sort_order == "ascending" else False
+    # Preprocess data
+    data, set_to_abbre, set_to_order, abbre = preprocess_data(
+        data, sets, abbre, sort_order
     )
 
-    data = pd.melt(data, id_vars=["intersection_id", "count", "degree"])
-    data = data.rename(columns={"variable": "set", "value": "is_intersect"})
-
-    if abbre == None:
-        abbre = sets
-
-    set_to_abbre = pd.DataFrame(
-        [[sets[i], abbre[i]] for i in range(len(sets))], columns=["set", "set_abbre"]
-    )
-    set_to_order = pd.DataFrame(
-        [[sets[i], 1 + sets.index(sets[i])] for i in range(len(sets))],
-        columns=["set", "set_order"],
-    )
-
-    degree_calculation = ""
-    for s in sets:
-        degree_calculation += f"(isDefined(datum['{s}']) ? datum['{s}'] : 0)"
-        if sets[-1] != s:
-            degree_calculation += "+"
-
-    """
-    Selections
-    """
+    # Setup selections
     legend_selection = alt.selection_multi(fields=["set"], bind="legend")
     color_selection = alt.selection_single(fields=["intersection_id"], on="mouseover")
     opacity_selection = alt.selection_single(fields=["intersection_id"])
 
-    """
-    Styles
-    """
+    # Calculate dimensions
     vertical_bar_chart_height = height * height_ratio
     matrix_height = height - vertical_bar_chart_height
     matrix_width = width - horizontal_bar_chart_width
-
     vertical_bar_size = min(
         30,
         width / len(data["intersection_id"].unique().tolist()) - vertical_bar_padding,
     )
 
+    # Setup styles
     main_color = "#3A3A3A"
-    brush_opacity = alt.condition(~opacity_selection, alt.value(1), alt.value(0.6))
     brush_color = alt.condition(
         ~color_selection, alt.value(main_color), alt.value(highlight_color)
     )
-
     is_show_horizontal_bar_label_bg = len(abbre[0]) <= 2
     horizontal_bar_label_bg_color = (
         "white" if is_show_horizontal_bar_label_bg else "black"
     )
-
     x_sort = alt.Sort(
         field="count" if sort_by == "frequency" else "degree", order=sort_order
     )
@@ -106,141 +76,49 @@ def UpSetAltair(
         alt.Tooltip("degree:Q", title="Degree"),
     ]
 
-    """
-    Plots
-    """
-    base = (
-        alt.Chart(data)
-        .transform_filter(legend_selection)
-        .transform_pivot(
-            "set",
-            op="max",
-            groupby=["intersection_id", "count"],
-            value="is_intersect",
-        )
-        .transform_aggregate(
-            count="sum(count)",
-            groupby=sets,
-        )
-        .transform_calculate(
-            degree=degree_calculation
-        )
-        .transform_filter(
-            alt.datum["degree"] != 0
-        )
-        .transform_window(
-            intersection_id="row_number()",
-            frame=[None, None],
-        )
-        .transform_fold(
-            sets,
-            as_=["set", "is_intersect"],
-        )
-        .transform_lookup(
-            lookup="set",
-            from_=alt.LookupData(set_to_abbre, "set", ["set_abbre"]),
-        )
-        .transform_lookup(
-            lookup="set",
-            from_=alt.LookupData(set_to_order, "set", ["set_order"]),
-        )
-        .transform_filter(
-            legend_selection
-        )
-        .transform_window(
-            set_order="distinct(set)",
-            frame=[None, 0],
-            sort=[{"field": "set_order"}],
-        )
+    # Create base chart
+    base = create_base_chart(data, sets, legend_selection, set_to_abbre, set_to_order)
+
+    # Create components
+    vertical_bar, vertical_bar_text = create_vertical_bar(
+        base,
+        matrix_width,
+        vertical_bar_chart_height,
+        main_color,
+        vertical_bar_size,
+        brush_color,
+        x_sort,
+        tooltip,
+        vertical_bar_label_size,
     )
-
-    # Cardinality by intersecting sets (vertical bar chart)
-    vertical_bar = (
-        base.mark_bar(color=main_color, size=vertical_bar_size)
-        .encode(
-            x=alt.X(
-                "intersection_id:N",
-                axis=alt.Axis(grid=False, labels=False, ticks=False, domain=True),
-                sort=x_sort,
-                title=None,
-            ),
-            y=alt.Y(
-                "max(count):Q",
-                axis=alt.Axis(grid=False, tickCount=3, orient="right"),
-                title="Intersection Size",
-            ),
-            color=brush_color,
-            tooltip=tooltip,
-        )
-        .properties(width=matrix_width, height=vertical_bar_chart_height)
-    )
-
-    vertical_bar_text = vertical_bar.mark_text(
-        color=main_color, dy=-10, size=vertical_bar_label_size
-    ).encode(text=alt.Text("count:Q", format=".0f"))
-
     vertical_bar_chart = (vertical_bar + vertical_bar_text).add_selection(
         color_selection
     )
 
-    # UpSet glyph view (matrix view)
-    circle_bg = (
-        vertical_bar.mark_circle(size=glyph_size, opacity=1)
-        .encode(
-            x=alt.X(
-                "intersection_id:N",
-                axis=alt.Axis(grid=False, labels=False, ticks=False, domain=False),
-                sort=x_sort,
-                title=None,
-            ),
-            y=alt.Y(
-                "set_order:N",
-                axis=alt.Axis(grid=False, labels=False, ticks=False, domain=False),
-                title=None,
-            ),
-            color=alt.value("#E6E6E6"),
-        )
-        .properties(height=matrix_height)
+    circle_bg, rect_bg, circle, line_connection = create_matrix_view(
+        vertical_bar,
+        matrix_height,
+        glyph_size,
+        x_sort,
+        brush_color,
+        line_connection_size,
+        main_color,
     )
-
-    rect_bg = (
-        circle_bg.mark_rect()
-        .transform_filter(alt.datum["set_order"] % 2 == 1)
-        .encode(color=alt.value("#F7F7F7"))
-    )
-
-    circle = circle_bg.transform_filter(alt.datum["is_intersect"] == 1).encode(
-        color=brush_color
-    )
-
-    line_connection = (
-        vertical_bar.mark_bar(size=line_connection_size, color=main_color)
-        .transform_filter(alt.datum["is_intersect"] == 1)
-        .encode(y=alt.Y("min(set_order):N"), y2=alt.Y2("max(set_order):N"))
-    )
-
     matrix_view = (
         circle + rect_bg + circle_bg + line_connection + circle
-    ).add_selection(
-        color_selection
-    )
+    ).add_selection(color_selection)
 
-    # Cardinality by sets (horizontal bar chart)
-    horizontal_bar_label_bg = base.mark_circle(size=set_label_bg_size).encode(
-        y=alt.Y(
-            "set_order:N",
-            axis=alt.Axis(grid=False, labels=False, ticks=False, domain=False),
-            title=None,
-        ),
-        color=alt.Color(
-            "set:N", scale=alt.Scale(domain=sets, range=color_range), title=None
-        ),
-        opacity=alt.value(1),
-    )
-    horizontal_bar_label = horizontal_bar_label_bg.mark_text(
-        align=("center" if is_show_horizontal_bar_label_bg else "center")
-    ).encode(
-        text=alt.Text("set_abbre:N"), color=alt.value(horizontal_bar_label_bg_color)
+    horizontal_bar_label_bg, horizontal_bar_label, horizontal_bar = (
+        create_horizontal_bar(
+            base,
+            set_label_bg_size,
+            sets,
+            color_range,
+            is_show_horizontal_bar_label_bg,
+            horizontal_bar_label_bg_color,
+            horizontal_bar_size,
+            horizontal_bar_chart_width,
+        )
     )
     horizontal_bar_axis = (
         (horizontal_bar_label_bg + horizontal_bar_label)
@@ -248,18 +126,7 @@ def UpSetAltair(
         else horizontal_bar_label
     )
 
-    horizontal_bar = (
-        horizontal_bar_label_bg.mark_bar(size=horizontal_bar_size)
-        .transform_filter(alt.datum["is_intersect"] == 1)
-        .encode(
-            x=alt.X(
-                "sum(count):Q", axis=alt.Axis(grid=False, tickCount=3), title="Set Size"
-            )
-        )
-        .properties(width=horizontal_bar_chart_width)
-    )
-
-    # Concat Plots
+    # Combine components
     upsetaltair = alt.vconcat(
         vertical_bar_chart,
         alt.hconcat(
@@ -271,7 +138,7 @@ def UpSetAltair(
         spacing=20,
     ).add_selection(legend_selection)
 
-    # Apply top-level configuration
+    # Apply configuration
     upsetaltair = upsetaltair_top_level_configuration(
         upsetaltair, legend_orient="top", legend_symbol_size=set_label_bg_size / 2.0
     ).properties(
@@ -285,4 +152,4 @@ def UpSetAltair(
         }
     )
 
-    return upsetaltair 
+    return upsetaltair
