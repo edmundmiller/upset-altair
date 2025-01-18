@@ -44,6 +44,55 @@ def upsetaltair_top_level_configuration(
     )
 
 
+def save_and_compare_specs(chart, test_name, expected_path):
+    """Helper function to save and compare specs"""
+    vega_spec = chart.to_dict()
+    
+    # Save generated spec
+    output_dir = Path("tests/debug")
+    output_dir.mkdir(exist_ok=True)
+    
+    with open(output_dir / f"generated_{test_name}.vl.json", "w") as f:
+        json.dump(vega_spec, f, indent=2)
+
+    # Load and save expected spec
+    with open(expected_path) as f:
+        expected_spec = json.load(f)
+    
+    with open(output_dir / f"expected_{test_name}.vl.json", "w") as f:
+        json.dump(expected_spec, f, indent=2)
+
+    try:
+        assert vega_spec == expected_spec
+    except AssertionError:
+        def get_nested_keys(d, prefix=""):
+            keys = []
+            for k, v in d.items():
+                new_prefix = f"{prefix}.{k}" if prefix else k
+                if isinstance(v, dict):
+                    keys.extend(get_nested_keys(v, new_prefix))
+                else:
+                    keys.append(new_prefix)
+            return keys
+
+        generated_keys = set(get_nested_keys(vega_spec))
+        expected_keys = set(get_nested_keys(expected_spec))
+
+        print(f"\nDifferences for {test_name}:")
+        print("Missing keys:", expected_keys - generated_keys)
+        print("Extra keys:", generated_keys - expected_keys)
+        
+        # Compare some key values
+        if 'config' in vega_spec and 'config' in expected_spec:
+            print("\nConfig differences:")
+            print("Generated:", vega_spec['config'])
+            print("Expected:", expected_spec['config'])
+        
+        raise
+
+    return vega_spec, expected_spec
+
+
 def test_upset_by_frequency():
     """Test UpSet plot sorted by frequency"""
     df = load_test_data()
@@ -66,47 +115,12 @@ def test_upset_by_frequency():
         sort_by="frequency",
         sort_order="ascending",
     )
-
-    # Convert to Vega-Lite spec
-    vega_spec = chart.to_dict()
     
-    # Save generated spec for visualization
-    output_dir = Path("tests/debug")
-    output_dir.mkdir(exist_ok=True)
-    
-    with open(output_dir / "generated_frequency.vl.json", "w") as f:
-        json.dump(vega_spec, f, indent=2)
-
-    # Load expected spec
-    with open("tests/snapshots/covid_symptoms_by_frequency.vl.json") as f:
-        expected_spec = json.load(f)
-        
-    # Save expected spec for easier comparison
-    with open(output_dir / "expected_frequency.vl.json", "w") as f:
-        json.dump(expected_spec, f, indent=2)
-
-    try:
-        assert vega_spec == expected_spec
-    except AssertionError:
-        # Print key differences
-        def get_nested_keys(d, prefix=""):
-            keys = []
-            for k, v in d.items():
-                new_prefix = f"{prefix}.{k}" if prefix else k
-                if isinstance(v, dict):
-                    keys.extend(get_nested_keys(v, new_prefix))
-                else:
-                    keys.append(new_prefix)
-            return keys
-
-        generated_keys = set(get_nested_keys(vega_spec))
-        expected_keys = set(get_nested_keys(expected_spec))
-
-        print("\nMissing keys in generated spec:", expected_keys - generated_keys)
-        print("\nExtra keys in generated spec:", generated_keys - expected_keys)
-        
-        # Re-raise the assertion error
-        raise
+    save_and_compare_specs(
+        chart,
+        "frequency",
+        "tests/snapshots/covid_symptoms_by_frequency.vl.json"
+    )
 
 
 def test_upset_by_degree():
@@ -132,12 +146,11 @@ def test_upset_by_degree():
         sort_order="ascending",
     )
 
-    vega_spec = chart.to_dict()
-
-    with open("tests/snapshots/covid_symptoms_by_degree.vl.json") as f:
-        expected_spec = json.load(f)
-
-    assert vega_spec == expected_spec
+    save_and_compare_specs(
+        chart,
+        "degree",
+        "tests/snapshots/covid_symptoms_by_degree.vl.json"
+    )
 
 
 def test_upset_by_degree_custom():
@@ -176,9 +189,8 @@ def test_upset_by_degree_custom():
         vertical_bar_padding=14,
     )
 
-    vega_spec = chart.to_dict()
-
-    with open("tests/snapshots/covid_symptoms_by_degree_custom.vl.json") as f:
-        expected_spec = json.load(f)
-
-    assert vega_spec == expected_spec
+    save_and_compare_specs(
+        chart,
+        "degree_custom",
+        "tests/snapshots/covid_symptoms_by_degree_custom.vl.json"
+    )
