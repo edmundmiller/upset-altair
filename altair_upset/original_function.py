@@ -2,18 +2,15 @@ import pandas as pd
 import altair as alt
 
 
+# Top-level altair configuration
 def upsetaltair_top_level_configuration(
-    chart, legend_orient="top", legend_symbol_size=500
+    base, legend_orient="top-left", legend_symbol_size=30
 ):
-    """Apply top-level configuration to the UpSet plot.
-
-    Parameters:
-        - chart (alt.Chart): The Altair chart to configure
-        - legend_orient (str): The orientation of the legend
-        - legend_symbol_size (float): The size of the legend symbols
-    """
     return (
-        chart.configure_view(stroke=None, strokeWidth=0, width=1200, height=700)
+        base.configure_view(stroke=None)
+        .configure_title(
+            fontSize=18, fontWeight=400, anchor="start", subtitlePadding=10
+        )
         .configure_axis(
             labelFontSize=14,
             labelFontWeight=300,
@@ -22,23 +19,15 @@ def upsetaltair_top_level_configuration(
             titlePadding=10,
         )
         .configure_legend(
-            labelFontSize=14,
-            labelFontWeight=300,
             titleFontSize=16,
             titleFontWeight=400,
+            labelFontSize=14,
+            labelFontWeight=300,
             padding=20,
             orient=legend_orient,
             symbolType="circle",
             symbolSize=legend_symbol_size,
         )
-        .configure_title(
-            fontSize=20,
-            fontWeight=500,
-            subtitleFontSize=14,
-            subtitlePadding=10,
-            subtitleColor="#3A3A3A",
-        )
-        .configure(background="white")
         .configure_concat(spacing=0)
     )
 
@@ -94,7 +83,7 @@ def UpSetAltair(
     if (height_ratio < 0) or (1 < height_ratio):
         print("height_ratio set to 0.5")
         height_ratio = 0.5
-    if abbre is not None and len(sets) != len(abbre):
+    if len(sets) != len(abbre):
         abbre = None
         print(
             "Dropping the `abbre` list because the lengths of `sets` and `abbre` are not identical."
