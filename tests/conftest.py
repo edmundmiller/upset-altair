@@ -220,13 +220,14 @@ def normalize_spec(spec):
     """Normalize a Vega-Lite spec for comparison"""
     spec = spec.copy()
     selection_counter = 0
+    selection_map = {}  # Add a mapping to ensure consistent IDs
 
     # Normalize schema version
     if "$schema" in spec:
         spec["$schema"] = "https://vega.github.io/schema/vega-lite/v4.json"
 
     def normalize_data(d):
-        nonlocal selection_counter
+        nonlocal selection_counter, selection_map
 
         if isinstance(d, dict):
             d.pop("data", None)
@@ -235,16 +236,17 @@ def normalize_spec(spec):
             if "selection" in d:
                 if isinstance(d["selection"], dict):
                     normalized_selections = {}
-                    for v in sorted(
-                        d["selection"].values(),
-                        key=lambda x: json.dumps(x, sort_keys=True),
-                    ):
-                        normalized_selections[f"selector{selection_counter:03d}"] = v
-                        selection_counter += 1
+                    for k, v in sorted(d["selection"].items(), key=lambda x: json.dumps(x[1], sort_keys=True)):
+                        if k not in selection_map:
+                            selection_map[k] = f"selector{selection_counter:03d}"
+                            selection_counter += 1
+                        normalized_selections[selection_map[k]] = v
                     d["selection"] = normalized_selections
                 elif isinstance(d["selection"], str):
-                    d["selection"] = f"selector{selection_counter:03d}"
-                    selection_counter += 1
+                    if d["selection"] not in selection_map:
+                        selection_map[d["selection"]] = f"selector{selection_counter:03d}"
+                        selection_counter += 1
+                    d["selection"] = selection_map[d["selection"]]
 
             return {k: normalize_data(v) for k, v in sorted(d.items())}
         elif isinstance(d, list):
