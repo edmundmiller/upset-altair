@@ -1,0 +1,28 @@
+[project]
+authors = ["Edmund Miller <edmund.miller@seqera.io>"]
+channels = ["conda-forge", "bioconda"]
+description = "Add a short description here"
+name = "upset-altair-env"
+platforms = ["osx-64"]
+version = "0.1.0"
+
+[tasks]
+reproduce = "pytest tests/test_covid_symptoms.py"
+
+[dependencies]
+python = ">=3.7"
+jupyter = "*"
+nb_conda = "*"
+pandas = "1.5.*"
+requests = "*"
+numpy = "*"
+altair = "4.0.0.*"
+jsonschema = "<=4.0"
+altair_saver = "*"
+vega_datasets = "*"
+selenium = "<=4.2"
+pytest = "*"
+nodejs = "18.*"
+
+[pypi-dependencies]
+altair_upset = { path = ".", editable = true }
