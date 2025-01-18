@@ -10,7 +10,12 @@ htmlcov
 *.egg-info/
 /.ipynb_checkpoints/
 /.coverage
-tests/debug/
+*.egg-info
+
 # pixi environments
 .pixi
-*.egg-info
+
+# Test artifacts
+tests/debug/*.png
+tests/debug/*.vl.json
+tests/__snapshots__/*.png

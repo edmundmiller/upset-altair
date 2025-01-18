@@ -1,0 +1,1748 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "config": {
+    "axis": {
+      "labelFontSize": 14,
+      "labelFontWeight": 300,
+      "titleFontSize": 16,
+      "titleFontWeight": 400,
+      "titlePadding": 10
+    },
+    "concat": {
+      "spacing": 0
+    },
+    "legend": {
+      "labelFontSize": 14,
+      "labelFontWeight": 300,
+      "orient": "top",
+      "padding": 20,
+      "symbolSize": 500.0,
+      "symbolType": "circle",
+      "titleFontSize": 16,
+      "titleFontWeight": 400
+    },
+    "title": {
+      "anchor": "start",
+      "fontSize": 18,
+      "fontWeight": 400,
+      "subtitlePadding": 10
+    },
+    "view": {
+      "continuousHeight": 300,
+      "continuousWidth": 400,
+      "stroke": null
+    }
+  },
+  "spacing": 20,
+  "title": {
+    "fontSize": 20,
+    "fontWeight": 500,
+    "subtitle": [
+      "Story & Data: https://www.nature.com/articles/d41586-020-00154-w",
+      "Altair-based UpSet Plot: https://github.com/hms-dbmi/upset-altair-notebook"
+    ],
+    "subtitleColor": "#3A3A3A",
+    "subtitleFontSize": 14,
+    "text": "Symptoms Reported by Users of the COVID Symptom Tracker App"
+  },
+  "vconcat": [
+    {
+      "hconcat": [
+        {
+          "encoding": {
+            "color": {
+              "field": "set",
+              "scale": {
+                "domain": [
+                  "Shortness of Breath",
+                  "Diarrhea",
+                  "Fever",
+                  "Cough",
+                  "Anosmia",
+                  "Fatigue"
+                ],
+                "range": [
+                  "#55A8DB",
+                  "#3070B5",
+                  "#30363F",
+                  "#F1AD60",
+                  "#DF6234",
+                  "#BDC6CA"
+                ]
+              },
+              "title": null,
+              "type": "nominal"
+            },
+            "opacity": {
+              "value": 1
+            },
+            "x": {
+              "aggregate": "sum",
+              "axis": {
+                "grid": false,
+                "tickCount": 3
+              },
+              "field": "count",
+              "title": "Set Size",
+              "type": "quantitative"
+            },
+            "y": {
+              "axis": {
+                "domain": false,
+                "grid": false,
+                "labels": false,
+                "ticks": false
+              },
+              "field": "set_order",
+              "title": null,
+              "type": "nominal"
+            }
+          },
+          "mark": {
+            "size": 20,
+            "type": "bar"
+          },
+          "selection": {
+            "selector028": {
+              "bind": "legend",
+              "fields": [
+                "set"
+              ],
+              "type": "multi"
+            }
+          },
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "as": "count",
+                  "field": "count",
+                  "op": "sum"
+                }
+              ],
+              "groupby": [
+                "Shortness of Breath",
+                "Diarrhea",
+                "Fever",
+                "Cough",
+                "Anosmia",
+                "Fatigue"
+              ]
+            },
+            {
+              "as": "degree",
+              "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+            },
+            {
+              "as": [
+                "set",
+                "is_intersect"
+              ],
+              "fold": [
+                "Shortness of Breath",
+                "Diarrhea",
+                "Fever",
+                "Cough",
+                "Anosmia",
+                "Fatigue"
+              ]
+            },
+            {
+              "filter": "(datum['degree'] !== 0)"
+            },
+            {
+              "filter": "(datum['is_intersect'] === 1)"
+            },
+            {
+              "filter": {
+                "selection": "selector029"
+              }
+            },
+            {
+              "filter": {
+                "selection": "selector030"
+              }
+            },
+            {
+              "frame": [
+                null,
+                0
+              ],
+              "sort": [
+                {
+                  "field": "set_order"
+                }
+              ],
+              "window": [
+                {
+                  "as": "set_order",
+                  "field": "set",
+                  "op": "distinct"
+                }
+              ]
+            },
+            {
+              "frame": [
+                null,
+                null
+              ],
+              "window": [
+                {
+                  "as": "intersection_id",
+                  "field": "",
+                  "op": "row_number"
+                }
+              ]
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_abbre"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_order"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "groupby": [
+                "intersection_id",
+                "count"
+              ],
+              "op": "max",
+              "pivot": "set",
+              "value": "is_intersect"
+            }
+          ],
+          "width": 300
+        },
+        {
+          "layer": [
+            {
+              "encoding": {
+                "color": {
+                  "condition": {
+                    "selection": {
+                      "selector010": "selector005"
+                    },
+                    "value": "#3A3A3A"
+                  },
+                  "value": "#EA4667"
+                },
+                "tooltip": [
+                  {
+                    "aggregate": "max",
+                    "field": "count",
+                    "title": "Cardinality",
+                    "type": "quantitative"
+                  },
+                  {
+                    "field": "degree",
+                    "title": "Degree",
+                    "type": "quantitative"
+                  }
+                ],
+                "x": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "intersection_id",
+                  "sort": {
+                    "field": "degree",
+                    "order": "ascending"
+                  },
+                  "title": null,
+                  "type": "nominal"
+                },
+                "y": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "set_order",
+                  "title": null,
+                  "type": "nominal"
+                }
+              },
+              "height": 280.0,
+              "mark": {
+                "opacity": 1,
+                "size": 200,
+                "type": "circle"
+              },
+              "selection": {
+                "selector008": {
+                  "bind": "legend",
+                  "fields": [
+                    "set"
+                  ],
+                  "type": "multi"
+                },
+                "selector009": {
+                  "fields": [
+                    "intersection_id"
+                  ],
+                  "on": "mouseover",
+                  "type": "single"
+                }
+              },
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": "(datum['is_intersect'] === 1)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector011"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector012"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ],
+              "width": 900
+            },
+            {
+              "encoding": {
+                "color": {
+                  "condition": {
+                    "selection": {
+                      "selector017": "selector005"
+                    },
+                    "value": "#3A3A3A"
+                  },
+                  "value": "#EA4667"
+                },
+                "tooltip": [
+                  {
+                    "aggregate": "max",
+                    "field": "count",
+                    "title": "Cardinality",
+                    "type": "quantitative"
+                  },
+                  {
+                    "field": "degree",
+                    "title": "Degree",
+                    "type": "quantitative"
+                  }
+                ],
+                "x": {
+                  "axis": {
+                    "domain": true,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "intersection_id",
+                  "sort": {
+                    "field": "degree",
+                    "order": "ascending"
+                  },
+                  "title": null,
+                  "type": "nominal"
+                },
+                "y": {
+                  "aggregate": "min",
+                  "field": "set_order",
+                  "type": "nominal"
+                },
+                "y2": {
+                  "aggregate": "max",
+                  "field": "set_order"
+                }
+              },
+              "height": 420.0,
+              "mark": {
+                "color": "#3A3A3A",
+                "size": 2,
+                "type": "bar"
+              },
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": "(datum['is_intersect'] === 1)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector018"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector019"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ],
+              "width": 900
+            },
+            {
+              "encoding": {
+                "color": {
+                  "condition": {
+                    "selection": {
+                      "selector020": "selector005"
+                    },
+                    "value": "#3A3A3A"
+                  },
+                  "value": "#EA4667"
+                },
+                "tooltip": [
+                  {
+                    "aggregate": "max",
+                    "field": "count",
+                    "title": "Cardinality",
+                    "type": "quantitative"
+                  },
+                  {
+                    "field": "degree",
+                    "title": "Degree",
+                    "type": "quantitative"
+                  }
+                ],
+                "x": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "intersection_id",
+                  "sort": {
+                    "field": "degree",
+                    "order": "ascending"
+                  },
+                  "title": null,
+                  "type": "nominal"
+                },
+                "y": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "set_order",
+                  "title": null,
+                  "type": "nominal"
+                }
+              },
+              "height": 280.0,
+              "mark": {
+                "opacity": 1,
+                "size": 200,
+                "type": "circle"
+              },
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": "(datum['is_intersect'] === 1)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector021"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector022"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ],
+              "width": 900
+            },
+            {
+              "encoding": {
+                "color": {
+                  "value": "#E6E6E6"
+                },
+                "tooltip": [
+                  {
+                    "aggregate": "max",
+                    "field": "count",
+                    "title": "Cardinality",
+                    "type": "quantitative"
+                  },
+                  {
+                    "field": "degree",
+                    "title": "Degree",
+                    "type": "quantitative"
+                  }
+                ],
+                "x": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "intersection_id",
+                  "sort": {
+                    "field": "degree",
+                    "order": "ascending"
+                  },
+                  "title": null,
+                  "type": "nominal"
+                },
+                "y": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "set_order",
+                  "title": null,
+                  "type": "nominal"
+                }
+              },
+              "height": 280.0,
+              "mark": {
+                "opacity": 1,
+                "size": 200,
+                "type": "circle"
+              },
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector015"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector016"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ],
+              "width": 900
+            },
+            {
+              "encoding": {
+                "color": {
+                  "value": "#F7F7F7"
+                },
+                "tooltip": [
+                  {
+                    "aggregate": "max",
+                    "field": "count",
+                    "title": "Cardinality",
+                    "type": "quantitative"
+                  },
+                  {
+                    "field": "degree",
+                    "title": "Degree",
+                    "type": "quantitative"
+                  }
+                ],
+                "x": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "intersection_id",
+                  "sort": {
+                    "field": "degree",
+                    "order": "ascending"
+                  },
+                  "title": null,
+                  "type": "nominal"
+                },
+                "y": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "set_order",
+                  "title": null,
+                  "type": "nominal"
+                }
+              },
+              "height": 280.0,
+              "mark": "rect",
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "filter": "((datum['set_order'] % 2) === 1)"
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector013"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector014"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ],
+              "width": 900
+            }
+          ]
+        },
+        {
+          "layer": [
+            {
+              "encoding": {
+                "color": {
+                  "field": "set",
+                  "scale": {
+                    "domain": [
+                      "Shortness of Breath",
+                      "Diarrhea",
+                      "Fever",
+                      "Cough",
+                      "Anosmia",
+                      "Fatigue"
+                    ],
+                    "range": [
+                      "#55A8DB",
+                      "#3070B5",
+                      "#30363F",
+                      "#F1AD60",
+                      "#DF6234",
+                      "#BDC6CA"
+                    ]
+                  },
+                  "title": null,
+                  "type": "nominal"
+                },
+                "opacity": {
+                  "value": 1
+                },
+                "y": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "set_order",
+                  "title": null,
+                  "type": "nominal"
+                }
+              },
+              "mark": {
+                "size": 1000,
+                "type": "circle"
+              },
+              "selection": {
+                "selector023": {
+                  "bind": "legend",
+                  "fields": [
+                    "set"
+                  ],
+                  "type": "multi"
+                }
+              },
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector024"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector025"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ]
+            },
+            {
+              "encoding": {
+                "color": {
+                  "value": "white"
+                },
+                "opacity": {
+                  "value": 1
+                },
+                "text": {
+                  "field": "set_abbre",
+                  "type": "nominal"
+                },
+                "y": {
+                  "axis": {
+                    "domain": false,
+                    "grid": false,
+                    "labels": false,
+                    "ticks": false
+                  },
+                  "field": "set_order",
+                  "title": null,
+                  "type": "nominal"
+                }
+              },
+              "mark": {
+                "align": "center",
+                "type": "text"
+              },
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "as": "count",
+                      "field": "count",
+                      "op": "sum"
+                    }
+                  ],
+                  "groupby": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "as": "degree",
+                  "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+                },
+                {
+                  "as": [
+                    "set",
+                    "is_intersect"
+                  ],
+                  "fold": [
+                    "Shortness of Breath",
+                    "Diarrhea",
+                    "Fever",
+                    "Cough",
+                    "Anosmia",
+                    "Fatigue"
+                  ]
+                },
+                {
+                  "filter": "(datum['degree'] !== 0)"
+                },
+                {
+                  "filter": {
+                    "selection": "selector026"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "selector027"
+                  }
+                },
+                {
+                  "frame": [
+                    null,
+                    0
+                  ],
+                  "sort": [
+                    {
+                      "field": "set_order"
+                    }
+                  ],
+                  "window": [
+                    {
+                      "as": "set_order",
+                      "field": "set",
+                      "op": "distinct"
+                    }
+                  ]
+                },
+                {
+                  "frame": [
+                    null,
+                    null
+                  ],
+                  "window": [
+                    {
+                      "as": "intersection_id",
+                      "field": "",
+                      "op": "row_number"
+                    }
+                  ]
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_abbre"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "from": {
+                    "fields": [
+                      "set_order"
+                    ],
+                    "key": "set"
+                  },
+                  "lookup": "set"
+                },
+                {
+                  "groupby": [
+                    "intersection_id",
+                    "count"
+                  ],
+                  "op": "max",
+                  "pivot": "set",
+                  "value": "is_intersect"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "resolve": {
+        "scale": {
+          "y": "shared"
+        }
+      },
+      "spacing": 5
+    },
+    {
+      "layer": [
+        {
+          "encoding": {
+            "color": {
+              "condition": {
+                "selection": {
+                  "selector002": "selector005"
+                },
+                "value": "#3A3A3A"
+              },
+              "value": "#EA4667"
+            },
+            "tooltip": [
+              {
+                "aggregate": "max",
+                "field": "count",
+                "title": "Cardinality",
+                "type": "quantitative"
+              },
+              {
+                "field": "degree",
+                "title": "Degree",
+                "type": "quantitative"
+              }
+            ],
+            "x": {
+              "axis": {
+                "domain": true,
+                "grid": false,
+                "labels": false,
+                "ticks": false
+              },
+              "field": "intersection_id",
+              "sort": {
+                "field": "degree",
+                "order": "ascending"
+              },
+              "title": null,
+              "type": "nominal"
+            },
+            "y": {
+              "aggregate": "max",
+              "axis": {
+                "grid": false,
+                "orient": "right",
+                "tickCount": 3
+              },
+              "field": "count",
+              "title": "Intersection Size",
+              "type": "quantitative"
+            }
+          },
+          "height": 420.0,
+          "mark": {
+            "color": "#3A3A3A",
+            "size": 17.5,
+            "type": "bar"
+          },
+          "selection": {
+            "selector000": {
+              "bind": "legend",
+              "fields": [
+                "set"
+              ],
+              "type": "multi"
+            },
+            "selector001": {
+              "fields": [
+                "intersection_id"
+              ],
+              "on": "mouseover",
+              "type": "single"
+            }
+          },
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "as": "count",
+                  "field": "count",
+                  "op": "sum"
+                }
+              ],
+              "groupby": [
+                "Shortness of Breath",
+                "Diarrhea",
+                "Fever",
+                "Cough",
+                "Anosmia",
+                "Fatigue"
+              ]
+            },
+            {
+              "as": "degree",
+              "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+            },
+            {
+              "as": [
+                "set",
+                "is_intersect"
+              ],
+              "fold": [
+                "Shortness of Breath",
+                "Diarrhea",
+                "Fever",
+                "Cough",
+                "Anosmia",
+                "Fatigue"
+              ]
+            },
+            {
+              "filter": "(datum['degree'] !== 0)"
+            },
+            {
+              "filter": {
+                "selection": "selector003"
+              }
+            },
+            {
+              "filter": {
+                "selection": "selector004"
+              }
+            },
+            {
+              "frame": [
+                null,
+                0
+              ],
+              "sort": [
+                {
+                  "field": "set_order"
+                }
+              ],
+              "window": [
+                {
+                  "as": "set_order",
+                  "field": "set",
+                  "op": "distinct"
+                }
+              ]
+            },
+            {
+              "frame": [
+                null,
+                null
+              ],
+              "window": [
+                {
+                  "as": "intersection_id",
+                  "field": "",
+                  "op": "row_number"
+                }
+              ]
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_abbre"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_order"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "groupby": [
+                "intersection_id",
+                "count"
+              ],
+              "op": "max",
+              "pivot": "set",
+              "value": "is_intersect"
+            }
+          ],
+          "width": 900
+        },
+        {
+          "encoding": {
+            "color": {
+              "condition": {
+                "selection": {
+                  "selector005": "selector005"
+                },
+                "value": "#3A3A3A"
+              },
+              "value": "#EA4667"
+            },
+            "text": {
+              "field": "count",
+              "format": ".0f",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "aggregate": "max",
+                "field": "count",
+                "title": "Cardinality",
+                "type": "quantitative"
+              },
+              {
+                "field": "degree",
+                "title": "Degree",
+                "type": "quantitative"
+              }
+            ],
+            "x": {
+              "axis": {
+                "domain": true,
+                "grid": false,
+                "labels": false,
+                "ticks": false
+              },
+              "field": "intersection_id",
+              "sort": {
+                "field": "degree",
+                "order": "ascending"
+              },
+              "title": null,
+              "type": "nominal"
+            },
+            "y": {
+              "aggregate": "max",
+              "axis": {
+                "grid": false,
+                "orient": "right",
+                "tickCount": 3
+              },
+              "field": "count",
+              "title": "Intersection Size",
+              "type": "quantitative"
+            }
+          },
+          "height": 420.0,
+          "mark": {
+            "color": "#3A3A3A",
+            "dy": -10,
+            "size": 16,
+            "type": "text"
+          },
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "as": "count",
+                  "field": "count",
+                  "op": "sum"
+                }
+              ],
+              "groupby": [
+                "Shortness of Breath",
+                "Diarrhea",
+                "Fever",
+                "Cough",
+                "Anosmia",
+                "Fatigue"
+              ]
+            },
+            {
+              "as": "degree",
+              "calculate": "(isDefined(datum['Shortness of Breath']) ? datum['Shortness of Breath'] : 0)+(isDefined(datum['Diarrhea']) ? datum['Diarrhea'] : 0)+(isDefined(datum['Fever']) ? datum['Fever'] : 0)+(isDefined(datum['Cough']) ? datum['Cough'] : 0)+(isDefined(datum['Anosmia']) ? datum['Anosmia'] : 0)+(isDefined(datum['Fatigue']) ? datum['Fatigue'] : 0)"
+            },
+            {
+              "as": [
+                "set",
+                "is_intersect"
+              ],
+              "fold": [
+                "Shortness of Breath",
+                "Diarrhea",
+                "Fever",
+                "Cough",
+                "Anosmia",
+                "Fatigue"
+              ]
+            },
+            {
+              "filter": "(datum['degree'] !== 0)"
+            },
+            {
+              "filter": {
+                "selection": "selector006"
+              }
+            },
+            {
+              "filter": {
+                "selection": "selector007"
+              }
+            },
+            {
+              "frame": [
+                null,
+                0
+              ],
+              "sort": [
+                {
+                  "field": "set_order"
+                }
+              ],
+              "window": [
+                {
+                  "as": "set_order",
+                  "field": "set",
+                  "op": "distinct"
+                }
+              ]
+            },
+            {
+              "frame": [
+                null,
+                null
+              ],
+              "window": [
+                {
+                  "as": "intersection_id",
+                  "field": "",
+                  "op": "row_number"
+                }
+              ]
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_abbre"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "from": {
+                "fields": [
+                  "set_order"
+                ],
+                "key": "set"
+              },
+              "lookup": "set"
+            },
+            {
+              "groupby": [
+                "intersection_id",
+                "count"
+              ],
+              "op": "max",
+              "pivot": "set",
+              "value": "is_intersect"
+            }
+          ],
+          "width": 900
+        }
+      ]
+    }
+  ]
+}
