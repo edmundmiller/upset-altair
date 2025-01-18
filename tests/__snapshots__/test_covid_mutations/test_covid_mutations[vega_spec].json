@@ -33,6 +33,38 @@
       "stroke": null
     }
   },
+  "params": [
+    {
+      "bind": "legend",
+      "name": "param_1",
+      "select": {
+        "fields": [
+          "set"
+        ],
+        "type": "point"
+      },
+      "views": [
+        "view_1",
+        "view_2",
+        "view_3",
+        "view_4"
+      ]
+    },
+    {
+      "name": "param_2",
+      "select": {
+        "fields": [
+          "intersection_id"
+        ],
+        "on": "mouseover",
+        "type": "point"
+      },
+      "views": [
+        "view_1",
+        "view_2"
+      ]
+    }
+  ],
   "spacing": 20,
   "title": {
     "fontSize": 20,
@@ -110,15 +142,7 @@
             "size": 20,
             "type": "bar"
           },
-          "selection": {
-            "selector000": {
-              "bind": "legend",
-              "fields": [
-                "set"
-              ],
-              "type": "multi"
-            }
-          },
+          "name": "view_4",
           "transform": [
             {
               "aggregate": [
@@ -171,12 +195,12 @@
             },
             {
               "filter": {
-                "selection": "selector000"
+                "param": "param_1"
               }
             },
             {
               "filter": {
-                "selection": "selector000"
+                "param": "param_1"
               }
             },
             {
@@ -241,13 +265,16 @@
           "width": 300
         },
         {
+          "height": 280.0,
           "layer": [
             {
               "encoding": {
                 "color": {
                   "condition": {
-                    "selection": {
-                      "selector000": "selector002"
+                    "test": {
+                      "not": {
+                        "param": "param_2"
+                      }
                     },
                     "value": "#3A3A3A"
                   },
@@ -293,28 +320,12 @@
                   "type": "nominal"
                 }
               },
-              "height": 280.0,
               "mark": {
                 "opacity": 1,
                 "size": 200,
                 "type": "circle"
               },
-              "selection": {
-                "selector000": {
-                  "bind": "legend",
-                  "fields": [
-                    "set"
-                  ],
-                  "type": "multi"
-                },
-                "selector001": {
-                  "fields": [
-                    "intersection_id"
-                  ],
-                  "on": "mouseover",
-                  "type": "single"
-                }
-              },
+              "name": "view_2",
               "transform": [
                 {
                   "aggregate": [
@@ -367,12 +378,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
@@ -433,15 +444,16 @@
                   "pivot": "set",
                   "value": "is_intersect"
                 }
-              ],
-              "width": 900
+              ]
             },
             {
               "encoding": {
                 "color": {
                   "condition": {
-                    "selection": {
-                      "selector000": "selector002"
+                    "test": {
+                      "not": {
+                        "param": "param_2"
+                      }
                     },
                     "value": "#3A3A3A"
                   },
@@ -487,7 +499,6 @@
                   "type": "nominal"
                 }
               },
-              "height": 280.0,
               "mark": {
                 "opacity": 1,
                 "size": 200,
@@ -545,12 +556,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
@@ -611,15 +622,16 @@
                   "pivot": "set",
                   "value": "is_intersect"
                 }
-              ],
-              "width": 900
+              ]
             },
             {
               "encoding": {
                 "color": {
                   "condition": {
-                    "selection": {
-                      "selector000": "selector002"
+                    "test": {
+                      "not": {
+                        "param": "param_2"
+                      }
                     },
                     "value": "#3A3A3A"
                   },
@@ -663,7 +675,6 @@
                   "field": "set_order"
                 }
               },
-              "height": 420.0,
               "mark": {
                 "color": "#3A3A3A",
                 "size": 2,
@@ -721,12 +732,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
@@ -787,8 +798,7 @@
                   "pivot": "set",
                   "value": "is_intersect"
                 }
-              ],
-              "width": 900
+              ]
             },
             {
               "encoding": {
@@ -835,7 +845,6 @@
                   "type": "nominal"
                 }
               },
-              "height": 280.0,
               "mark": {
                 "opacity": 1,
                 "size": 200,
@@ -890,12 +899,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
@@ -956,8 +965,7 @@
                   "pivot": "set",
                   "value": "is_intersect"
                 }
-              ],
-              "width": 900
+              ]
             },
             {
               "encoding": {
@@ -1004,8 +1012,9 @@
                   "type": "nominal"
                 }
               },
-              "height": 280.0,
-              "mark": "rect",
+              "mark": {
+                "type": "rect"
+              },
               "transform": [
                 {
                   "aggregate": [
@@ -1058,12 +1067,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
@@ -1124,10 +1133,10 @@
                   "pivot": "set",
                   "value": "is_intersect"
                 }
-              ],
-              "width": 900
+              ]
             }
-          ]
+          ],
+          "width": 900
         },
         {
           "layer": [
@@ -1183,15 +1192,7 @@
                 "size": 650,
                 "type": "circle"
               },
-              "selection": {
-                "selector000": {
-                  "bind": "legend",
-                  "fields": [
-                    "set"
-                  ],
-                  "type": "multi"
-                }
-              },
+              "name": "view_3",
               "transform": [
                 {
                   "aggregate": [
@@ -1241,12 +1242,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
@@ -1386,12 +1387,12 @@
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
                   "filter": {
-                    "selection": "selector000"
+                    "param": "param_1"
                   }
                 },
                 {
@@ -1454,7 +1455,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "width": 300
         }
       ],
       "resolve": {
@@ -1465,13 +1467,16 @@
       "spacing": 5
     },
     {
+      "height": 420.0,
       "layer": [
         {
           "encoding": {
             "color": {
               "condition": {
-                "selection": {
-                  "selector000": "selector002"
+                "test": {
+                  "not": {
+                    "param": "param_2"
+                  }
                 },
                 "value": "#3A3A3A"
               },
@@ -1522,7 +1527,6 @@
               "type": "quantitative"
             }
           },
-          "height": 420.0,
           "mark": {
             "color": "#3A3A3A",
             "dy": -10,
@@ -1578,12 +1582,12 @@
             },
             {
               "filter": {
-                "selection": "selector000"
+                "param": "param_1"
               }
             },
             {
               "filter": {
-                "selection": "selector000"
+                "param": "param_1"
               }
             },
             {
@@ -1644,15 +1648,16 @@
               "pivot": "set",
               "value": "is_intersect"
             }
-          ],
-          "width": 900
+          ]
         },
         {
           "encoding": {
             "color": {
               "condition": {
-                "selection": {
-                  "selector000": "selector002"
+                "test": {
+                  "not": {
+                    "param": "param_2"
+                  }
                 },
                 "value": "#3A3A3A"
               },
@@ -1698,28 +1703,12 @@
               "type": "quantitative"
             }
           },
-          "height": 420.0,
           "mark": {
             "color": "#3A3A3A",
             "size": 30,
             "type": "bar"
           },
-          "selection": {
-            "selector000": {
-              "bind": "legend",
-              "fields": [
-                "set"
-              ],
-              "type": "multi"
-            },
-            "selector001": {
-              "fields": [
-                "intersection_id"
-              ],
-              "on": "mouseover",
-              "type": "single"
-            }
-          },
+          "name": "view_1",
           "transform": [
             {
               "aggregate": [
@@ -1769,12 +1758,12 @@
             },
             {
               "filter": {
-                "selection": "selector000"
+                "param": "param_1"
               }
             },
             {
               "filter": {
-                "selection": "selector000"
+                "param": "param_1"
               }
             },
             {
@@ -1835,10 +1824,10 @@
               "pivot": "set",
               "value": "is_intersect"
             }
-          ],
-          "width": 900
+          ]
         }
-      ]
+      ],
+      "width": 1200
     }
   ]
 }

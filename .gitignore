@@ -18,4 +18,3 @@ htmlcov
 # Test artifacts
 tests/debug/*.png
 tests/debug/*.vl.json
-tests/__snapshots__/*.png

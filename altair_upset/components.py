@@ -13,24 +13,20 @@ def create_vertical_bar(
     vertical_bar_label_size,
 ):
     """Creates the vertical bar chart component."""
-    vertical_bar = (
-        base.mark_bar(color=main_color, size=vertical_bar_size)
-        .encode(
-            x=alt.X(
-                "intersection_id:N",
-                axis=alt.Axis(grid=False, labels=False, ticks=False, domain=True),
-                sort=x_sort,
-                title=None,
-            ),
-            y=alt.Y(
-                "max(count):Q",
-                axis=alt.Axis(grid=False, tickCount=3, orient="right"),
-                title="Intersection Size",
-            ),
-            color=brush_color,
-            tooltip=tooltip,
-        )
-        .properties(width=matrix_width, height=vertical_bar_chart_height)
+    vertical_bar = base.mark_bar(color=main_color, size=vertical_bar_size).encode(
+        x=alt.X(
+            "intersection_id:N",
+            axis=alt.Axis(grid=False, labels=False, ticks=False, domain=True),
+            sort=x_sort,
+            title=None,
+        ),
+        y=alt.Y(
+            "max(count):Q",
+            axis=alt.Axis(grid=False, tickCount=3, orient="right"),
+            title="Intersection Size",
+        ),
+        color=brush_color,
+        tooltip=tooltip,
     )
 
     vertical_bar_text = vertical_bar.mark_text(
@@ -50,23 +46,19 @@ def create_matrix_view(
     main_color,
 ):
     """Creates the matrix view component."""
-    circle_bg = (
-        vertical_bar.mark_circle(size=glyph_size, opacity=1)
-        .encode(
-            x=alt.X(
-                "intersection_id:N",
-                axis=alt.Axis(grid=False, labels=False, ticks=False, domain=False),
-                sort=x_sort,
-                title=None,
-            ),
-            y=alt.Y(
-                "set_order:N",
-                axis=alt.Axis(grid=False, labels=False, ticks=False, domain=False),
-                title=None,
-            ),
-            color=alt.value("#E6E6E6"),
-        )
-        .properties(height=matrix_height)
+    circle_bg = vertical_bar.mark_circle(size=glyph_size, opacity=1).encode(
+        x=alt.X(
+            "intersection_id:N",
+            axis=alt.Axis(grid=False, labels=False, ticks=False, domain=False),
+            sort=x_sort,
+            title=None,
+        ),
+        y=alt.Y(
+            "set_order:N",
+            axis=alt.Axis(grid=False, labels=False, ticks=False, domain=False),
+            title=None,
+        ),
+        color=alt.value("#E6E6E6"),
     )
 
     rect_bg = (
@@ -125,7 +117,6 @@ def create_horizontal_bar(
                 "sum(count):Q", axis=alt.Axis(grid=False, tickCount=3), title="Set Size"
             )
         )
-        .properties(width=horizontal_bar_chart_width)
     )
 
     return horizontal_bar_label_bg, horizontal_bar_label, horizontal_bar
