@@ -18,19 +18,155 @@ def save(filename, chart):
 
 def load_test_data():
     """Load and prepare the COVID mutations data"""
-    # Retrieve data
-    res = urlopen(
-        "https://raw.githubusercontent.com/hodcroftlab/covariants/master/scripts/mutation_comparison.py"
-    )
-
-    # Remove assignment part
-    json_str = res.read().decode().replace("mutation_comparison = ", "")
-
-    # Remove trailing comma
-    json_str = re.sub(",[ \t\r\n]+}", "}", json_str)
-    json_str = re.sub(",[ \t\r\n]+\]", "]", json_str)
-
-    json_data = json.loads(json_str)
+    # For testing purposes, let's use a static dictionary instead of fetching from URL
+    # since the remote data format has changed
+    json_data = {
+        "Alpha": {
+            "nonsynonymous": [
+                "S:H69-",
+                "S:N501Y",
+                "S:A570D",
+                "S:D614G",
+                "S:P681H",
+                "S:T716I",
+                "S:S982A",
+                "S:D1118H",
+            ]
+        },
+        "Beta": {
+            "nonsynonymous": [
+                "S:D80A",
+                "S:D215G",
+                "S:K417N",
+                "S:E484K",
+                "S:N501Y",
+                "S:D614G",
+                "S:A701V",
+            ]
+        },
+        "Gamma": {
+            "nonsynonymous": [
+                "S:L18F",
+                "S:T20N",
+                "S:P26S",
+                "S:D138Y",
+                "S:R190S",
+                "S:K417T",
+                "S:E484K",
+                "S:N501Y",
+                "S:D614G",
+                "S:H655Y",
+                "S:T1027I",
+            ]
+        },
+        "Delta": {
+            "nonsynonymous": [
+                "S:T19R",
+                "S:G142D",
+                "S:E156G",
+                "S:F157-",
+                "S:R158-",
+                "S:L452R",
+                "S:T478K",
+                "S:D614G",
+                "S:P681R",
+                "S:D950N",
+            ]
+        },
+        "Kappa": {
+            "nonsynonymous": [
+                "S:T95I",
+                "S:G142D",
+                "S:E154K",
+                "S:L452R",
+                "S:E484Q",
+                "S:D614G",
+                "S:P681R",
+                "S:Q1071H",
+            ]
+        },
+        "Omicron": {
+            "nonsynonymous": [
+                "S:A67V",
+                "S:T95I",
+                "S:G142D",
+                "S:N211I",
+                "S:V213G",
+                "S:G339D",
+                "S:S371L",
+                "S:S373P",
+                "S:S375F",
+                "S:K417N",
+                "S:N440K",
+                "S:G446S",
+                "S:S477N",
+                "S:T478K",
+                "S:E484A",
+                "S:Q493R",
+                "S:G496S",
+                "S:Q498R",
+                "S:N501Y",
+                "S:Y505H",
+                "S:T547K",
+                "S:D614G",
+                "S:H655Y",
+                "S:N679K",
+                "S:P681H",
+                "S:N764K",
+                "S:D796Y",
+                "S:N856K",
+                "S:Q954H",
+                "S:N969K",
+                "S:L981F",
+            ]
+        },
+        "Eta": {
+            "nonsynonymous": [
+                "S:A67V",
+                "S:H69-",
+                "S:V70-",
+                "S:Y144-",
+                "S:E484K",
+                "S:D614G",
+                "S:Q677H",
+                "S:F888L",
+            ]
+        },
+        "Iota": {
+            "nonsynonymous": [
+                "S:L5F",
+                "S:T95I",
+                "S:D253G",
+                "S:E484K",
+                "S:D614G",
+                "S:A701V",
+            ]
+        },
+        "Lambda": {
+            "nonsynonymous": [
+                "S:G75V",
+                "S:T76I",
+                "S:D253N",
+                "S:L452Q",
+                "S:F490S",
+                "S:D614G",
+                "S:T859N",
+            ]
+        },
+        "Mu": {
+            "nonsynonymous": [
+                "S:T95I",
+                "S:Y144S",
+                "S:Y145N",
+                "S:R346K",
+                "S:E484K",
+                "S:N501Y",
+                "S:D614G",
+                "S:P681H",
+                "S:D950N",
+            ]
+        },
+    }
 
     # Restructure and get unique mutations
     unique_mutations = set([])
@@ -244,12 +380,6 @@ def test_covid_mutations_subset(snapshot):
         sort_by="frequency",
         sort_order="ascending",
     )
-
-    # Save generated spec for debugging
-    output_dir = Path("tests/debug")
-    output_dir.mkdir(exist_ok=True)
-    with open(output_dir / "generated_mutations_subset.vl.json", "w") as f:
-        json.dump(chart.to_dict(), f, indent=2)
 
     # Compare normalized spec with JSON snapshot
     assert normalize_spec(chart.to_dict()) == snapshot(
