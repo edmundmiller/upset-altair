@@ -3,24 +3,19 @@ name = "altair-upset"
 dynamic = ["version"]
 description = "Create UpSet plots using Altair"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.7.0,<=3.10.2"
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Edmund Miller", email = "git@edmundmiller.dev"}
 ]
 dependencies = [
-    "altair>=4.0.0,<5.0.0",
-    "pandas>=1.0.0",
+    "altair==4.0.0",
+    "pandas==1.4.1",
 ]
 
 [dependency-groups]
-dev = [
-    "marimo",
-    "ipykernel",
-]
 test = [
-    "pytest>=7.0",
-    "pytest-cov>=4.0",
-    "syrupy>=4.0.0",
+    "pytest",
+    "syrupy", # TODO ==4.0.0",
     "vl-convert-python>=1.0.0",
 ]
 
@@ -30,8 +25,11 @@ python_files = ["test_*.py"]
 
 [tool.uv]
 package = true 
-default-groups = ["dev", "test"]
+default-groups = ["test"]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
