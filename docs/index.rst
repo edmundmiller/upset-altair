@@ -26,16 +26,17 @@ Installation
 
     pip install altair-upset
 
-Or with conda:
+.. TODO
+.. Or with conda:
 
-.. code-block:: bash
+.. .. code-block:: bash
 
-    conda install -c conda-forge altair-upset
+..     conda install -c conda-forge altair-upset
 
 Basic Usage
-^^^^^^^^^^
+^^^^^^^^^^^
 
-.. code-block:: python
+.. altair-plot::
 
     import altair_upset as au
     import pandas as pd
@@ -53,9 +54,7 @@ Basic Usage
         sets=["set1", "set2", "set3"],
         title="Sample UpSet Plot"
     )
-
-    # Display the chart
-    chart.show()
+    chart.chart  # Return the underlying Altair chart
 
 Contents
 --------
@@ -72,4 +71,4 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search` 
+* :ref:`search`

@@ -21,33 +21,6 @@ extensions = [
     "myst_nb",  # Add support for notebook-style code execution and includes myst_parser
 ]
 
-# Source parsers
-source_parsers = {
-    '.md': 'myst_nb.parser.NotebookParser',
-}
-
-# Source suffix
-source_suffix = ['.rst', '.md']
-
-# MyST Parser settings
-myst_enable_extensions = [
-    "colon_fence",    # For code blocks with syntax highlighting
-    "deflist",        # For definition lists
-    "dollarmath",     # For LaTeX math
-    "fieldlist",      # For field lists
-    "html_admonition", # For admonitions
-    "html_image",     # For images
-    "replacements",   # For smart quotes and dashes
-    "smartquotes",    # For smart quotes
-    "strikethrough", # For strikethrough
-    "tasklist",      # For task lists
-]
-
-# MyST-NB settings
-nb_execution_mode = "force"
-nb_execution_timeout = 300
-nb_execution_allow_errors = False
-
 # Theme settings
 html_theme = "pydata_sphinx_theme"
 html_theme_options = {
