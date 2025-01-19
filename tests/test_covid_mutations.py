@@ -1,9 +1,10 @@
 import json
-import pandas as pd
-from altair_upset import UpSetAltair
+
 from syrupy.extensions.image import PNGImageSnapshotExtension
 from syrupy.extensions.json import JSONSnapshotExtension
-from tests.conftest import save_chart, normalize_spec, covid_mutations_data
+
+from altair_upset import UpSetAltair
+from tests.conftest import normalize_spec
 
 
 def test_covid_mutations(covid_mutations_data, output_dir, snapshot):
@@ -47,15 +48,15 @@ def test_covid_mutations(covid_mutations_data, output_dir, snapshot):
 
     # Save generated spec for debugging
     with open(output_dir / "generated_mutations.vl.json", "w") as f:
-        json.dump(chart.to_dict(), f, indent=2)
+        json.dump(chart.chart.to_dict(), f, indent=2)
 
     # Compare normalized spec with JSON snapshot
-    assert normalize_spec(chart.to_dict()) == snapshot(
+    assert normalize_spec(chart.chart.to_dict()) == snapshot(
         name="vega_spec", extension_class=JSONSnapshotExtension
     )
 
     # Save and compare image snapshot
-    save_chart(str(output_dir / "mutations.png"), chart)
+    chart.save(str(output_dir / "mutations.png"))
     with open(output_dir / "mutations.png", "rb") as f:
         assert f.read() == snapshot(
             name="image", extension_class=PNGImageSnapshotExtension
@@ -79,15 +80,15 @@ def test_covid_mutations_subset(covid_mutations_data, output_dir, snapshot):
 
     # Save generated spec for debugging
     with open(output_dir / "generated_mutations_subset.vl.json", "w") as f:
-        json.dump(chart.to_dict(), f, indent=2)
+        json.dump(chart.chart.to_dict(), f, indent=2)
 
     # Compare normalized spec with JSON snapshot
-    assert normalize_spec(chart.to_dict()) == snapshot(
+    assert normalize_spec(chart.chart.to_dict()) == snapshot(
         name="vega_spec", extension_class=JSONSnapshotExtension
     )
 
     # Save and compare image snapshot
-    save_chart(str(output_dir / "mutations_subset.png"), chart)
+    chart.save(str(output_dir / "mutations_subset.png"))
     with open(output_dir / "mutations_subset.png", "rb") as f:
         assert f.read() == snapshot(
             name="image", extension_class=PNGImageSnapshotExtension

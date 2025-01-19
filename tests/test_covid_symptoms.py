@@ -1,8 +1,10 @@
 import json
-from altair_upset import UpSetAltair
+
 from syrupy.extensions.image import PNGImageSnapshotExtension
 from syrupy.extensions.json import JSONSnapshotExtension
-from tests.conftest import save_chart, normalize_spec
+
+from altair_upset import UpSetAltair
+from tests.conftest import normalize_spec
 
 
 def test_upset_by_frequency(covid_symptoms_data, output_dir, snapshot):
@@ -29,15 +31,15 @@ def test_upset_by_frequency(covid_symptoms_data, output_dir, snapshot):
 
     # Save generated spec for debugging
     with open(output_dir / "generated_frequency.vl.json", "w") as f:
-        json.dump(chart.to_dict(), f, indent=2)
+        json.dump(chart.chart.to_dict(), f, indent=2)
 
     # Compare normalized spec with JSON snapshot
-    assert normalize_spec(chart.to_dict()) == snapshot(
+    assert normalize_spec(chart.chart.to_dict()) == snapshot(
         name="vega_spec", extension_class=JSONSnapshotExtension
     )
 
     # Save and compare image snapshot
-    save_chart(str(output_dir / "frequency.png"), chart)
+    chart.save(str(output_dir / "frequency.png"))
     with open(output_dir / "frequency.png", "rb") as f:
         assert f.read() == snapshot(
             name="image", extension_class=PNGImageSnapshotExtension
@@ -68,15 +70,15 @@ def test_upset_by_degree(covid_symptoms_data, output_dir, snapshot):
 
     # Save generated spec for debugging
     with open(output_dir / "generated_degree.vl.json", "w") as f:
-        json.dump(chart.to_dict(), f, indent=2)
+        json.dump(chart.chart.to_dict(), f, indent=2)
 
     # Compare normalized spec with JSON snapshot
-    assert normalize_spec(chart.to_dict()) == snapshot(
+    assert normalize_spec(chart.chart.to_dict()) == snapshot(
         name="vega_spec", extension_class=JSONSnapshotExtension
     )
 
     # Save and compare image snapshot
-    save_chart(str(output_dir / "degree.png"), chart)
+    chart.save(str(output_dir / "degree.png"))
     with open(output_dir / "degree.png", "rb") as f:
         assert f.read() == snapshot(
             name="image", extension_class=PNGImageSnapshotExtension
@@ -120,15 +122,15 @@ def test_upset_by_degree_custom(covid_symptoms_data, output_dir, snapshot):
 
     # Save generated spec for debugging
     with open(output_dir / "generated_degree_custom.vl.json", "w") as f:
-        json.dump(chart.to_dict(), f, indent=2)
+        json.dump(chart.chart.to_dict(), f, indent=2)
 
     # Compare normalized spec with JSON snapshot
-    assert normalize_spec(chart.to_dict()) == snapshot(
+    assert normalize_spec(chart.chart.to_dict()) == snapshot(
         name="vega_spec", extension_class=JSONSnapshotExtension
     )
 
     # Save and compare image snapshot
-    save_chart(str(output_dir / "degree_custom.png"), chart)
+    chart.save(str(output_dir / "degree_custom.png"))
     with open(output_dir / "degree_custom.png", "rb") as f:
         assert f.read() == snapshot(
             name="image", extension_class=PNGImageSnapshotExtension
