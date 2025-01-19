@@ -31,7 +31,7 @@ Documentation = "https://altair-upset.readthedocs.io"
 Repository = "https://github.com/edmundmiller/altair-upset.git"
 Issues = "https://github.com/edmundmiller/altair-upset/issues"
 
-[project.optional-dependencies]
+[dependency-groups]
 test = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -71,6 +71,10 @@ python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+
+[tool.uv]
+package = true
+default-groups = ["dev", "test"]
 
 [build-system]
 requires = ["hatchling", "hatch-vcs"]
