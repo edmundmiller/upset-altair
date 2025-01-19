@@ -42,6 +42,7 @@ test = [
 dev = [
     "ruff>=0.1.0",
     "pre-commit>=3.0.0",
+    "taskipy>=1.14.1",
 ]
 docs = [
     "sphinx>=7.0.0",
@@ -84,3 +85,23 @@ build-backend = "hatchling.build"
 
 [tool.hatch.version]
 source = "vcs"
+
+[tool.taskipy.settings]
+cwd = "."
+
+[tool.taskipy.tasks]
+lint       = "ruff check"
+format     = "ruff format --diff --check"
+ruff-fix   = "task lint && ruff format"
+type-check = "mypy altair tests"
+
+pytest    = "pytest"
+
+doc-clean               = "python -c \"import tools;tools.fs.rm('doc/_build')\""
+# IDK doc-mkdir               = "python -c \"import tools;tools.fs.mkdir('doc/_images')\""
+doc-build-html          = "sphinx-build -T -b html -d docs/_build docs docs/_build/html"
+doc-clean-build         = "task doc-clean-all && task doc-build-html"
+
+clean   = "python -c \"import tools;tools.fs.rm('dist')\""
+build   = "task clean && uv build"
+publish = "task build && uv publish"

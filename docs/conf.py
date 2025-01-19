@@ -18,7 +18,6 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinxext_altair.altairplot",
-    "myst_nb",  # Add support for notebook-style code execution and includes myst_parser
 ]
 
 # Theme settings
