@@ -7,6 +7,44 @@ from .components import create_vertical_bar, create_matrix_view, create_horizont
 from .config import upsetaltair_top_level_configuration
 
 
+class UpSetChart:
+    """A wrapper class for UpSet plots."""
+    
+    def __init__(self, chart, data, sets):
+        """Initialize the UpSetChart.
+        
+        Parameters
+        ----------
+        chart : alt.Chart
+            The base Altair chart
+        data : pd.DataFrame
+            The input data
+        sets : list
+            List of set names
+        """
+        self.chart = chart
+        self.data = data
+        self.sets = sets
+    
+    def save(self, filename):
+        """Save the chart to a file."""
+        self.chart.save(filename)
+    
+    def properties(self, **kwargs):
+        """Update chart properties."""
+        self.chart = self.chart.properties(**kwargs)
+        return self
+    
+    def configure_axis(self, **kwargs):
+        """Configure chart axes."""
+        self.chart = self.chart.configure_axis(**kwargs)
+        return self
+    
+    def configure_legend(self, **kwargs):
+        """Configure chart legend."""
+        self.chart = self.chart.configure_legend(**kwargs)
+        return self
+
 def UpSetAltair(
     data: pd.DataFrame,
     sets: List[str],
@@ -29,7 +67,7 @@ def UpSetAltair(
     vertical_bar_label_size: int = 16,
     vertical_bar_padding: int = 20,
     theme: Optional[str] = None,
-) -> alt.Chart:
+) -> UpSetChart:
     """Generate interactive UpSet plots using Altair.
 
     UpSet plots are used to visualize set intersections in a more scalable way than Venn diagrams.
@@ -240,7 +278,7 @@ def UpSetAltair(
     ).add_params(legend_selection)
 
     # Apply configuration
-    upsetaltair = upsetaltair_top_level_configuration(
+    chart = upsetaltair_top_level_configuration(
         upsetaltair, legend_orient="top", legend_symbol_size=set_label_bg_size / 2.0
     ).properties(
         title={
@@ -252,5 +290,5 @@ def UpSetAltair(
             "subtitleFontSize": 14,
         }
     )
-
-    return upsetaltair
+    
+    return UpSetChart(chart, data, sets)
