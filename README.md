@@ -54,6 +54,46 @@ chart = au.UpSetAltair(
 chart.show()
 ```
 
+## Example Gallery
+
+The package includes a comprehensive gallery of examples demonstrating various features and use cases:
+
+### Basic Examples
+
+- **Basic UpSet Plot**: Simple visualization of streaming service subscriptions
+- **Sorting and Filtering**: Different ways to organize and present set intersections
+- **Custom Styling**: Examples of color schemes, themes, and layout customization
+
+### Real-World Examples
+
+- **Gene Set Analysis**: Visualizing intersections of biological pathways
+- **Survey Response Analysis**: Understanding multiple-choice survey patterns
+- **Social Media Usage**: Exploring platform usage overlaps with demographics
+- **Movie Genre Analysis**: Investigating genre combinations in film datasets
+
+### Advanced Features
+
+- **Interactive Selection**: Enhanced interaction and filtering capabilities
+- **Custom Tooltips**: Rich tooltips with additional information
+- **Responsive Design**: Adapting to different display sizes
+- **Theme Examples**: Using built-in and custom themes
+
+To run the examples:
+
+```bash
+git clone https://github.com/edmundmiller/altair-upset.git
+cd altair-upset
+pip install -e ".[examples]"
+python examples/basic_upset.py
+```
+
+Each example includes:
+
+- Sample data generation or loading
+- Plot creation with different features
+- Analysis and statistics
+- Detailed comments explaining each step
+
 ## Advanced Usage
 
 ### Sorting and Filtering
@@ -96,12 +136,14 @@ chart = au.UpSetAltair(
 ## Development
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/edmundmiller/altair-upset.git
 cd altair-upset
 ```
 
 2. Create a virtual environment and install dependencies:
+
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -109,11 +151,13 @@ pip install -e ".[dev,test,docs]"
 ```
 
 3. Install pre-commit hooks:
+
 ```bash
 pre-commit install
 ```
 
 4. Run tests:
+
 ```bash
 pytest
 ```
@@ -133,6 +177,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 This package is based on the [UpSet: Visualization of Intersecting Sets](http://upset.app/) technique. If you use an UpSet figure in a publication, please cite the original paper:
 
 Alexander Lex, Nils Gehlenborg, Hendrik Strobelt, Romain Vuillemot, Hanspeter Pfister,
-*UpSet: Visualization of Intersecting Sets*,
+_UpSet: Visualization of Intersecting Sets_,
 IEEE Transactions on Visualization and Computer Graphics (InfoVis '14), vol. 20, no. 12, pp. 1983–1992, 2014.
 doi: [10.1109/TVCG.2014.2346248](https://doi.org/10.1109/TVCG.2014.2346248)
