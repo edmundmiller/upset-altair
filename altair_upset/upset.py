@@ -1,18 +1,20 @@
-from typing import List, Optional, Union, Dict, Any
+from typing import List, Optional, Union
+
 import altair as alt
 import pandas as pd
+
+from .components import create_horizontal_bar, create_matrix_view, create_vertical_bar
+from .config import upsetaltair_top_level_configuration
 from .preprocessing import preprocess_data
 from .transforms import create_base_chart
-from .components import create_vertical_bar, create_matrix_view, create_horizontal_bar
-from .config import upsetaltair_top_level_configuration
 
 
 class UpSetChart:
     """A wrapper class for UpSet plots."""
-    
+
     def __init__(self, chart, data, sets):
         """Initialize the UpSetChart.
-        
+
         Parameters
         ----------
         chart : alt.Chart
@@ -25,25 +27,40 @@ class UpSetChart:
         self.chart = chart
         self.data = data
         self.sets = sets
-    
+
     def save(self, filename):
         """Save the chart to a file."""
         self.chart.save(filename)
-    
+
     def properties(self, **kwargs):
         """Update chart properties."""
         self.chart = self.chart.properties(**kwargs)
         return self
-    
+
     def configure_axis(self, **kwargs):
         """Configure chart axes."""
         self.chart = self.chart.configure_axis(**kwargs)
         return self
-    
+
     def configure_legend(self, **kwargs):
         """Configure chart legend."""
         self.chart = self.chart.configure_legend(**kwargs)
         return self
+
+    def to_dict(self):
+        """Convert the chart to a dictionary representation.
+
+        Returns
+        -------
+        dict
+            The Vega-Lite specification as a Python dictionary
+        """
+        return self.chart.to_dict()
+
+    def __getattr__(self, name):
+        """Delegate unknown attributes to the underlying chart."""
+        return getattr(self.chart, name)
+
 
 def UpSetAltair(
     data: pd.DataFrame,
@@ -58,7 +75,14 @@ def UpSetAltair(
     height: int = 700,
     height_ratio: float = 0.6,
     horizontal_bar_chart_width: int = 300,
-    color_range: List[str] = ["#55A8DB", "#3070B5", "#30363F", "#F1AD60", "#DF6234", "#BDC6CA"],
+    color_range: List[str] = [
+        "#55A8DB",
+        "#3070B5",
+        "#30363F",
+        "#F1AD60",
+        "#DF6234",
+        "#BDC6CA",
+    ],
     highlight_color: str = "#EA4667",
     glyph_size: int = 200,
     set_label_bg_size: int = 1000,
@@ -290,5 +314,5 @@ def UpSetAltair(
             "subtitleFontSize": 14,
         }
     )
-    
+
     return UpSetChart(chart, data, sets)

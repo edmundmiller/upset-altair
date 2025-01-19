@@ -1,8 +1,9 @@
 import json
-import pytest
 from pathlib import Path
-import pandas as pd
+
 import altair as alt
+import pandas as pd
+import pytest
 
 
 @pytest.fixture
@@ -207,11 +208,6 @@ def covid_mutations_data():
     )
 
     return df
-
-
-def save_chart(filename, chart):
-    """Save an Altair chart to PNG using Altair's built-in saving capabilities"""
-    chart.save(filename, scale_factor=2.0)
 
 
 def normalize_spec(spec):
