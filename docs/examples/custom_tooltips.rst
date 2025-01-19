@@ -1,8 +1,8 @@
 Custom Tooltips and Interactivity Example
-=======================================
+=========================================
 
-This example demonstrates how to create UpSet plots with custom tooltips and
-enhanced interactivity using a dataset of social media platform usage.
+This example demonstrates how to create UpSet plots with custom tooltips and enhanced
+interactivity using a dataset of social media platform usage.
 
 Setup
 -----
@@ -47,32 +47,28 @@ First, let's import our libraries and create some sample data:
     combinations = data.groupby(platforms).apply(calculate_metrics).reset_index()
 
 Enhanced UpSet Plot
------------------
+-------------------
 
 Create an enhanced UpSet plot with custom colors and sizing:
 
 .. altair-plot::
 
-    chart = au.UpSetAltair(
+    au.UpSetAltair(
         data=data[platforms],
         sets=platforms,
         title="Social Media Platform Usage Patterns",
         subtitle="Analysis of user behavior across platforms",
-        sort_by="frequency",
-        sort_order="descending",
-        width=1000,
-        height=600,
-        color_range=["#1877F2", "#E4405F", "#1DA1F2", "#0A66C2", "#000000"],  # Platform colors
-    )
-    chart
+        width=800,
+        height=500
+    ).chart
 
 Analysis Results
---------------
+----------------
 
 Let's analyze the platform usage patterns and user demographics:
 
 Platform-specific Statistics
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -81,27 +77,29 @@ Platform-specific Statistics
     for platform in platforms:
         platform_users = data[data[platform] == 1]
         metrics = {
-            'Users': len(platform_users),
-            'Avg Age': platform_users['age'].mean(),
-            'Avg Posts/Week': platform_users['posts_per_week'].mean(),
-            'Avg Engagement': platform_users['engagement_rate'].mean() * 100,
-            'Avg Account Age': platform_users['account_age_years'].mean()
+            "Users": len(platform_users),
+            "Avg Age": platform_users["age"].mean(),
+            "Avg Posts/Week": platform_users["posts_per_week"].mean(),
+            "Avg Engagement": platform_users["engagement_rate"].mean() * 100,
+            "Avg Account Age": platform_users["account_age_years"].mean(),
         }
         print(f"\n{platform}:")
         for metric, value in metrics.items():
             print(f"- {metric}: {value:.1f}")
 
 Most Engaged Combinations
-^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
     # Most engaged combinations
     print("\nTop 3 most engaged platform combinations:")
-    engagement_by_combination = combinations.sort_values('avg_engagement', ascending=False).head(3)
+    engagement_by_combination = combinations.sort_values(
+        "avg_engagement", ascending=False
+    ).head(3)
     for _, row in engagement_by_combination.iterrows():
         active_platforms = [p for p, v in zip(platforms, row[platforms]) if v == 1]
-        platform_str = ' & '.join(active_platforms)
+        platform_str = " & ".join(active_platforms)
         print(f"\n{platform_str}:")
         print(f"- Users: {row['users']}")
         print(f"- Avg Engagement Rate: {row['avg_engagement']:.1f}%")
@@ -109,18 +107,22 @@ Most Engaged Combinations
         print(f"- Avg User Age: {row['avg_age']:.1f}")
 
 Age Distribution Analysis
-^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
     # Age distribution analysis
     print("\nAge group distribution across platforms:")
-    data['age_group'] = pd.cut(data['age'], 
-                            bins=[0, 20, 30, 40, 50, 100],
-                            labels=['<20', '20-30', '30-40', '40-50', '50+'])
+    data["age_group"] = pd.cut(
+        data["age"],
+        bins=[0, 20, 30, 40, 50, 100],
+        labels=["<20", "20-30", "30-40", "40-50", "50+"],
+    )
 
     for platform in platforms:
         print(f"\n{platform} age distribution:")
-        age_dist = data[data[platform] == 1]['age_group'].value_counts(normalize=True).sort_index()
+        age_dist = (
+            data[data[platform] == 1]["age_group"].value_counts(normalize=True).sort_index()
+        )
         for age_group, percentage in age_dist.items():
             print(f"- {age_group}: {percentage*100:.1f}%")

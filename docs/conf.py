@@ -3,8 +3,10 @@
 import os
 import sys
 from datetime import datetime
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('..'))
+# Add project root to Python path for autodoc
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
 # Project information
 project = 'altair-upset'
@@ -14,9 +16,8 @@ author = 'Edmund Miller'
 # Extensions
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
-    "sphinx.ext.viewcode",
+    "sphinx.ext.intersphinx",
     "sphinxext_altair.altairplot",
 ]
 

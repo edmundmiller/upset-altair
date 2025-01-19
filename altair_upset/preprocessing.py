@@ -3,7 +3,9 @@ import pandas as pd
 
 def preprocess_data(data, sets, abbre, sort_order):
     """Handles the data preprocessing for UpSet plots."""
-    data["count"] = 0
+    # Create a copy to avoid SettingWithCopyWarning
+    data = data.copy()
+    data.loc[:, "count"] = 0
     data = data[sets + ["count"]]
     data = data.groupby(sets).count().reset_index()
 

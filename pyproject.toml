@@ -51,6 +51,7 @@ docs = [
     "myst-parser>=2.0.0",
     "sphinxext-altair>=0.2.0",
     "matplotlib>=3.8.0",
+    "docstrfmt>=1.9.0",
 ]
 examples = [
     "numpy>1.24.4",
@@ -97,10 +98,10 @@ type-check = "mypy altair tests"
 
 pytest    = "pytest"
 
-doc-clean               = "python -c \"import tools;tools.fs.rm('doc/_build')\""
+doc-clean               = "rm -rf docs/_build && rm -rf docs/_images"
 # IDK doc-mkdir               = "python -c \"import tools;tools.fs.mkdir('doc/_images')\""
 doc-build-html          = "sphinx-build -T -b html -d docs/_build docs docs/_build/html"
-doc-clean-build         = "task doc-clean-all && task doc-build-html"
+doc-clean-build         = "task doc-clean && task doc-build-html"
 
 clean   = "python -c \"import tools;tools.fs.rm('dist')\""
 build   = "task clean && uv build"

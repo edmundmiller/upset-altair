@@ -92,7 +92,7 @@ def UpSetAltair(
     vertical_bar_padding: int = 20,
     theme: Optional[str] = None,
 ) -> UpSetChart:
-    """Generate interactive UpSet plots using Altair.
+    """Generate interactive UpSet plots using Altair. [Lex et al., 2014]_
 
     UpSet plots are used to visualize set intersections in a more scalable way than Venn diagrams.
     This implementation provides interactive features like hover highlighting and legend filtering.
@@ -172,9 +172,9 @@ def UpSetAltair(
 
     References
     ----------
-    .. [1] Lex, A., Gehlenborg, N., Strobelt, H., Vuillemot, R., & Pfister, H. (2014).
-           UpSet: visualization of intersecting sets.
-           IEEE transactions on visualization and computer graphics, 20(12), 1983-1992.
+    .. [Lex et al., 2014] Alexander Lex, Nils Gehlenborg, Hendrik Strobelt, Romain Vuillemot, Hanspeter Pfister.
+                UpSet: Visualization of Intersecting Sets
+                IEEE transactions on visualization and computer graphics, 20(12), 1983-1992.
     """
     # Input validation
     if not isinstance(data, pd.DataFrame):

@@ -1,9 +1,9 @@
 Gene Set Analysis Example
-========================
+=========================
 
-This example demonstrates how to use UpSet plots to visualize gene set intersections,
-a common use case in bioinformatics. We'll use simulated data representing genes
-involved in different biological pathways.
+This example demonstrates how to use UpSet plots to visualize gene set intersections, a
+common use case in bioinformatics. We'll use simulated data representing genes involved
+in different biological pathways.
 
 Setup
 -----
@@ -40,93 +40,126 @@ First, let's import our libraries and create some sample data:
         elif pathway == 'DNA_Repair':
             # DNA repair genes are more likely to be involved in cell cycle
             p_repair = np.where(data['Cell_Cycle'] == 1, 0.3, 0.05)
+            p_repair = np.clip(p_repair, 0, 1)  # Ensure probabilities are valid
             data[pathway] = np.random.binomial(1, p_repair)
         elif pathway == 'Apoptosis':
             # Apoptosis genes might be involved in cell cycle and DNA repair
             p_apoptosis = 0.05 + 0.15 * data['Cell_Cycle'] + 0.1 * data['DNA_Repair']
+            p_apoptosis = np.clip(p_apoptosis, 0, 1)  # Ensure probabilities are valid
             data[pathway] = np.random.binomial(1, p_apoptosis)
         else:
             data[pathway] = np.random.choice([0, 1], size=n_genes, p=[1-prob, prob])
 
 Basic UpSet Plot
---------------
+----------------
 
 Create a basic UpSet plot showing all pathway intersections:
 
 .. altair-plot::
 
-    basic_chart = au.UpSetAltair(
+    au.UpSetAltair(
         data=data,
         sets=data.columns.tolist(),
         sort_by="frequency",
         sort_order="descending",
-        title="Gene Set Intersections in Biological Pathways",
-        subtitle="Analysis of gene involvement in multiple pathways"
-    )
-    basic_chart
+        title="Gene Set Intersections",
+        subtitle="Distribution of genes across pathways",
+        width=800,
+        height=500,
+        glyph_size=100,  # Ensure positive size
+        set_label_bg_size=500,  # Ensure positive size
+        line_connection_size=2,
+        horizontal_bar_size=20,
+        vertical_bar_label_size=12,
+        vertical_bar_padding=10
+    ).chart
 
 Focused DNA Repair Analysis
-------------------------
+---------------------------
 
-Create a version focused specifically on DNA repair-related pathways:
+Create a focused view of DNA repair pathways:
 
 .. altair-plot::
 
-    dna_pathways = ['DNA_Repair', 'Cell_Cycle', 'Apoptosis']
-    focused_chart = au.UpSetAltair(
-        data=data[dna_pathways],
-        sets=dna_pathways,
-        title="DNA Repair-Related Pathway Intersections",
-        subtitle="Focus on DNA repair, cell cycle, and apoptosis pathways",
-        color_range=["#2ECC71", "#E74C3C", "#3498DB"],
+    dna_repair_pathways = ['DNA_Repair', 'Cell_Cycle', 'Apoptosis']
+    au.UpSetAltair(
+        data=data[dna_repair_pathways],
+        sets=dna_repair_pathways,
+        sort_by="frequency",
+        sort_order="descending",
+        title="DNA Repair Pathway Intersections",
+        subtitle="Focused analysis of DNA repair mechanisms",
         width=800,
-        height=500
-    )
-    focused_chart
+        height=500,
+        glyph_size=100,  # Ensure positive size
+        set_label_bg_size=500,  # Ensure positive size
+        line_connection_size=2,
+        horizontal_bar_size=20,
+        vertical_bar_label_size=12,
+        vertical_bar_padding=10
+    ).chart
 
 Analysis Results
---------------
+----------------
 
 Let's analyze the pathway intersections in detail:
 
 Single Pathway Analysis
-^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
     print("\nGenes unique to each pathway:")
     for pathway in pathways:
-        unique_genes = data[data[pathway] == 1][data.drop(columns=[pathway]).sum(axis=1) == 0]
-        print(f"{pathway}: {len(unique_genes)} genes ({len(unique_genes)/n_genes*100:.1f}%)")
+        unique_genes = data[data[pathway] == 1][
+            data.drop(columns=[pathway]).sum(axis=1) == 0
+        ]
+        print(
+            f"{pathway}: {len(unique_genes)} genes ({len(unique_genes)/n_genes*100:.1f}%)"
+        )
 
 Multi-Pathway Analysis
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
     # Multi-pathway genes
     multi_pathway = data[data.sum(axis=1) > 1]
-    print(f"\nGenes involved in multiple pathways: {len(multi_pathway)} ({len(multi_pathway)/n_genes*100:.1f}%)")
+    print(
+        f"\nGenes involved in multiple pathways: {len(multi_pathway)} ({len(multi_pathway)/n_genes*100:.1f}%)"
+    )
+
 
     # Most common pathway combination
     def get_pathway_combination(row):
-        return ' & '.join(data.columns[row == 1])
+        return " & ".join(data.columns[row == 1])
 
-    most_common = data.groupby(data.columns.tolist()).size().sort_values(ascending=False).head(1)
-    combination = get_pathway_combination(pd.Series(most_common.index[0], index=data.columns))
+
+    most_common = (
+        data.groupby(data.columns.tolist()).size().sort_values(ascending=False).head(1)
+    )
+    combination = get_pathway_combination(
+        pd.Series(most_common.index[0], index=data.columns)
+    )
     print(f"\nMost common pathway combination: {combination}")
-    print(f"Number of genes: {most_common.values[0]} ({most_common.values[0]/n_genes*100:.1f}%)")
+    print(
+        f"Number of genes: {most_common.values[0]} ({most_common.values[0]/n_genes*100:.1f}%)"
+    )
 
 DNA Repair Pathway Analysis
-^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-    dna_repair_genes = data[data['DNA_Repair'] == 1]
+    dna_repair_genes = data[data["DNA_Repair"] == 1]
     print(f"\nDNA Repair Pathway Analysis:")
-    print(f"Total DNA repair genes: {len(dna_repair_genes)} ({len(dna_repair_genes)/n_genes*100:.1f}%)")
+    print(
+        f"Total DNA repair genes: {len(dna_repair_genes)} ({len(dna_repair_genes)/n_genes*100:.1f}%)"
+    )
     print("Co-occurrence with other pathways:")
     for pathway in pathways:
-        if pathway != 'DNA_Repair':
-            co_occurrence = data[(data['DNA_Repair'] == 1) & (data[pathway] == 1)]
-            print(f"{pathway}: {len(co_occurrence)} genes ({len(co_occurrence)/len(dna_repair_genes)*100:.1f}%)")
+        if pathway != "DNA_Repair":
+            co_occurrence = data[(data["DNA_Repair"] == 1) & (data[pathway] == 1)]
+            print(
+                f"{pathway}: {len(co_occurrence)} genes ({len(co_occurrence)/len(dna_repair_genes)*100:.1f}%)"
+            )

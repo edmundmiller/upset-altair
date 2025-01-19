@@ -1,5 +1,5 @@
 Welcome to altair-upset's documentation!
-=====================================
+========================================
 
 .. image:: https://badge.fury.io/py/altair-upset.svg
     :target: https://badge.fury.io/py/altair-upset
@@ -13,28 +13,34 @@ Welcome to altair-upset's documentation!
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
 
-Create beautiful and interactive UpSet plots using Altair. UpSet plots are a powerful alternative 
-to Venn diagrams for visualizing set intersections, especially when dealing with many sets.
+Create beautiful and interactive UpSet plots using Altair. UpSet plots are a powerful
+alternative to Venn diagrams for visualizing set intersections, especially when dealing
+with many sets.
 
 Quick Start
-----------
+-----------
 
 Installation
-^^^^^^^^^^^
+------------
 
 .. code-block:: bash
 
     pip install altair-upset
 
-.. TODO
-.. Or with conda:
+..
+    TODO
 
-.. .. code-block:: bash
+..
+    Or with conda:
 
-..     conda install -c conda-forge altair-upset
+..
+    .. code-block:: bash
+
+..
+    conda install -c conda-forge altair-upset
 
 Basic Usage
-^^^^^^^^^^^
+-----------
 
 .. altair-plot::
 
@@ -60,15 +66,19 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
-   examples/basic_upset
-   api
+    examples/README
+    examples/basic_upset
+    examples/custom_tooltips
+    examples/gene_sets
+    examples/advanced_features
+    api
 
 Indices and tables
------------------
+------------------
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+- :ref:`genindex`
+- :ref:`modindex`
+- :ref:`search`

@@ -1,8 +1,8 @@
 Advanced Features Example
-=======================
+=========================
 
-This example demonstrates the advanced features of UpSet plots including
-interactive filtering, statistical analysis, and animated transitions.
+This example demonstrates the advanced features of UpSet plots including interactive
+filtering, statistical analysis, and animated transitions.
 
 Setup
 -----
@@ -33,24 +33,23 @@ First, let's import our libraries and create some sample data with engagement me
     data['engagement_rate'] = np.random.beta(2, 5, n_users)
 
 Basic UpSet Plot with Metrics
---------------------------
+-----------------------------
 
 Create a basic UpSet plot showing platform usage with engagement metrics:
 
 .. altair-plot::
 
-    chart = au.UpSetAltair(
+    au.UpSetAltair(
         data=data,
         sets=platforms,
         title="Social Media Platform Usage Analysis",
         subtitle="Interactive analysis of user engagement patterns",
         width=800,
-        height=600
-    )
-    chart
+        height=500
+    ).chart
 
 Engagement Analysis
-----------------
+-------------------
 
 Let's analyze the engagement patterns across different platform combinations:
 
@@ -63,22 +62,28 @@ Let's analyze the engagement patterns across different platform combinations:
         print(f"Users: {len(platform_data)}")
         print(f"Average daily time: {platform_data['daily_time_spent'].mean():.1f} minutes")
         print(f"Average posts per week: {platform_data['posts_per_week'].mean():.1f}")
-        print(f"Average engagement rate: {platform_data['engagement_rate'].mean()*100:.1f}%")
+        print(
+            f"Average engagement rate: {platform_data['engagement_rate'].mean()*100:.1f}%"
+        )
+
 
     # Find most engaged platform combinations
     def get_engagement_metrics(group):
-        return pd.Series({
-            'users': len(group),
-            'avg_time': group['daily_time_spent'].mean(),
-            'avg_posts': group['posts_per_week'].mean(),
-            'avg_engagement': group['engagement_rate'].mean() * 100
-        })
+        return pd.Series(
+            {
+                "users": len(group),
+                "avg_time": group["daily_time_spent"].mean(),
+                "avg_posts": group["posts_per_week"].mean(),
+                "avg_engagement": group["engagement_rate"].mean() * 100,
+            }
+        )
+
 
     # Calculate metrics for all combinations
     combinations = data.groupby(platforms).apply(get_engagement_metrics).reset_index()
-    
+
     # Sort by average engagement
-    top_engaged = combinations.sort_values('avg_engagement', ascending=False).head(3)
+    top_engaged = combinations.sort_values("avg_engagement", ascending=False).head(3)
     print("\nTop 3 Most Engaged Platform Combinations:")
     for _, row in top_engaged.iterrows():
         active_platforms = [p for p, v in zip(platforms, row[platforms]) if v == 1]
