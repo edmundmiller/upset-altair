@@ -275,6 +275,11 @@
                     "field": "degree",
                     "title": "Degree",
                     "type": "quantitative"
+                  },
+                  {
+                    "field": "sets",
+                    "title": "Sets",
+                    "type": "nominal"
                   }
                 ],
                 "x": {
@@ -446,6 +451,11 @@
                     "field": "degree",
                     "title": "Degree",
                     "type": "quantitative"
+                  },
+                  {
+                    "field": "sets",
+                    "title": "Sets",
+                    "type": "nominal"
                   }
                 ],
                 "x": {
@@ -616,6 +626,11 @@
                     "field": "degree",
                     "title": "Degree",
                     "type": "quantitative"
+                  },
+                  {
+                    "field": "sets",
+                    "title": "Sets",
+                    "type": "nominal"
                   }
                 ],
                 "x": {
@@ -776,6 +791,11 @@
                     "field": "degree",
                     "title": "Degree",
                     "type": "quantitative"
+                  },
+                  {
+                    "field": "sets",
+                    "title": "Sets",
+                    "type": "nominal"
                   }
                 ],
                 "x": {
@@ -935,6 +955,11 @@
                     "field": "degree",
                     "title": "Degree",
                     "type": "quantitative"
+                  },
+                  {
+                    "field": "sets",
+                    "title": "Sets",
+                    "type": "nominal"
                   }
                 ],
                 "x": {
@@ -1418,6 +1443,11 @@
                 "field": "degree",
                 "title": "Degree",
                 "type": "quantitative"
+              },
+              {
+                "field": "sets",
+                "title": "Sets",
+                "type": "nominal"
               }
             ],
             "x": {
@@ -1586,6 +1616,11 @@
                 "field": "degree",
                 "title": "Degree",
                 "type": "quantitative"
+              },
+              {
+                "field": "sets",
+                "title": "Sets",
+                "type": "nominal"
               }
             ],
             "x": {
