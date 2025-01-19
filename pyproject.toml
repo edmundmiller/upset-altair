@@ -3,7 +3,7 @@ name = "altair-upset"
 dynamic = ["version"]
 description = "Create interactive UpSet plots using Altair"
 readme = "README.md"
-requires-python = ">=3.8.1"
+requires-python = ">=3.8.1,<4"
 license = {text = "MIT"}
 keywords = ["altair", "visualization", "upset", "sets", "vega"]
 authors = [
@@ -48,15 +48,17 @@ docs = [
     "sphinx-gallery>=0.15.0",
     "numpydoc>=1.6.0",
 ]
+examples = [
+    "numpy>=1.24.0",
+    "scikit-learn>=1.0.0",  # For advanced examples
+    "jupyter>=1.0.0",       # For interactive examples
+    "ipywidgets>=8.0.0",   # For interactive widgets
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "--cov=altair_upset --cov-report=term-missing"
-
-[tool.black]
-line-length = 88
-target-version = ["py38"]
 
 [tool.ruff]
 line-length = 88
