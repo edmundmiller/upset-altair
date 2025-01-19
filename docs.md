@@ -65,65 +65,83 @@ UpSetAltair(
 #### Parameters
 
 - **data** : pandas.DataFrame
+
   - Input data where each column represents a set and contains binary values (0 or 1)
   - Required parameter
 
 - **title** : str, default ""
+
   - Title of the plot
 
 - **subtitle** : str or list of str, default ""
+
   - Subtitle(s) of the plot
 
 - **sets** : list of str
+
   - Names of the sets to visualize
   - Must correspond to column names in the data
   - Required parameter
 
 - **abbre** : list of str, default None
+
   - Abbreviations for set names
   - Must have same length as sets if provided
   - If None, uses full set names
 
 - **sort_by** : {"frequency", "degree"}, default "frequency"
+
   - Method to sort the intersections
   - "frequency": sort by intersection size
   - "degree": sort by number of sets in intersection
 
 - **sort_order** : {"ascending", "descending"}, default "ascending"
+
   - Order of sorting for intersections
 
 - **width** : int, default 1200
+
   - Total width of the plot in pixels
 
 - **height** : int, default 700
+
   - Total height of the plot in pixels
 
 - **height_ratio** : float, default 0.6
+
   - Ratio of vertical bar chart height to total height
   - Must be between 0 and 1
 
 - **horizontal_bar_chart_width** : int, default 300
+
   - Width of the horizontal bar chart in pixels
 
 - **color_range** : list of str, default ["#55A8DB", "#3070B5", "#30363F", "#F1AD60", "#DF6234", "#BDC6CA"]
+
   - List of colors for the sets
 
 - **highlight_color** : str, default "#EA4667"
+
   - Color used for highlighting on hover
 
 - **glyph_size** : int, default 200
+
   - Size of the matrix glyphs in pixels
 
 - **set_label_bg_size** : int, default 1000
+
   - Size of the set label background circles
 
 - **line_connection_size** : int, default 2
+
   - Thickness of connecting lines in pixels
 
 - **horizontal_bar_size** : int, default 20
+
   - Height of horizontal bars in pixels
 
 - **vertical_bar_label_size** : int, default 16
+
   - Font size of vertical bar labels
 
 - **vertical_bar_padding** : int, default 20
@@ -178,4 +196,4 @@ chart = au.UpSetAltair(
 
 If you use an UpSet plot in a publication, please cite the original paper:
 
-Alexander Lex, Nils Gehlenborg, Hendrik Strobelt, Romain Vuillemot, Hanspeter Pfister. UpSet: Visualization of Intersecting Sets IEEE Transactions on Visualization and Computer Graphics (InfoVis), 20(12): 1983--1992, doi:10.1109/TVCG.2014.2346248, 2014. 
+Alexander Lex, Nils Gehlenborg, Hendrik Strobelt, Romain Vuillemot, Hanspeter Pfister. UpSet: Visualization of Intersecting Sets IEEE Transactions on Visualization and Computer Graphics (InfoVis), 20(12): 1983--1992, doi:10.1109/TVCG.2014.2346248, 2014.
