@@ -1,4 +1,6 @@
+from typing import List, Optional, Union, Dict, Any
 import altair as alt
+import pandas as pd
 from .preprocessing import preprocess_data
 from .transforms import create_base_chart
 from .components import create_vertical_bar, create_matrix_view, create_horizontal_bar
@@ -6,26 +8,28 @@ from .config import upsetaltair_top_level_configuration
 
 
 def UpSetAltair(
-    data=None,
-    title="",
-    subtitle="",
-    sets=None,
-    abbre=None,
-    sort_by="frequency",
-    sort_order="ascending",
-    width=1200,
-    height=700,
-    height_ratio=0.6,
-    horizontal_bar_chart_width=300,
-    color_range=["#55A8DB", "#3070B5", "#30363F", "#F1AD60", "#DF6234", "#BDC6CA"],
-    highlight_color="#EA4667",
-    glyph_size=200,
-    set_label_bg_size=1000,
-    line_connection_size=2,
-    horizontal_bar_size=20,
-    vertical_bar_label_size=16,
-    vertical_bar_padding=20,
-):
+    data: pd.DataFrame,
+    sets: List[str],
+    *,
+    title: str = "",
+    subtitle: Union[str, List[str]] = "",
+    abbre: Optional[List[str]] = None,
+    sort_by: str = "frequency",
+    sort_order: str = "ascending",
+    width: int = 1200,
+    height: int = 700,
+    height_ratio: float = 0.6,
+    horizontal_bar_chart_width: int = 300,
+    color_range: List[str] = ["#55A8DB", "#3070B5", "#30363F", "#F1AD60", "#DF6234", "#BDC6CA"],
+    highlight_color: str = "#EA4667",
+    glyph_size: int = 200,
+    set_label_bg_size: int = 1000,
+    line_connection_size: int = 2,
+    horizontal_bar_size: int = 20,
+    vertical_bar_label_size: int = 16,
+    vertical_bar_padding: int = 20,
+    theme: Optional[str] = None,
+) -> alt.Chart:
     """Generate interactive UpSet plots using Altair.
 
     UpSet plots are used to visualize set intersections in a more scalable way than Venn diagrams.
@@ -34,50 +38,53 @@ def UpSetAltair(
     Parameters
     ----------
     data : pandas.DataFrame
-        Input data where each column represents a set and contains binary values (0 or 1)
-    title : str, default ""
-        Title of the plot
-    subtitle : str or list of str, default ""
-        Subtitle(s) of the plot
+        Input data where each column represents a set and contains binary values (0 or 1).
+        Each row represents an element, and the columns indicate set membership.
     sets : list of str
-        Names of the sets to visualize (must correspond to column names in data)
+        Names of the sets to visualize (must correspond to column names in data).
+    title : str, default ""
+        Title of the plot.
+    subtitle : str or list of str, default ""
+        Subtitle(s) of the plot. Can be a single string or list of strings for multiple lines.
     abbre : list of str, optional
-        Abbreviations for set names (must have same length as sets)
+        Abbreviations for set names (must have same length as sets).
     sort_by : {"frequency", "degree"}, default "frequency"
         Method to sort the intersections:
         - "frequency": sort by intersection size
         - "degree": sort by number of sets in intersection
     sort_order : {"ascending", "descending"}, default "ascending"
-        Order of sorting for intersections
+        Order of sorting for intersections.
     width : int, default 1200
-        Total width of the plot in pixels
+        Total width of the plot in pixels.
     height : int, default 700
-        Total height of the plot in pixels
+        Total height of the plot in pixels.
     height_ratio : float, default 0.6
-        Ratio of vertical bar chart height to total height (between 0 and 1)
+        Ratio of vertical bar chart height to total height (between 0 and 1).
     horizontal_bar_chart_width : int, default 300
-        Width of the horizontal bar chart in pixels
+        Width of the horizontal bar chart in pixels.
     color_range : list of str
-        List of colors for the sets
+        List of colors for the sets. Defaults to a colorblind-friendly palette.
     highlight_color : str, default "#EA4667"
-        Color used for highlighting on hover
+        Color used for highlighting on hover.
     glyph_size : int, default 200
-        Size of the matrix glyphs in pixels
+        Size of the matrix glyphs in pixels.
     set_label_bg_size : int, default 1000
-        Size of the set label background circles
+        Size of the set label background circles.
     line_connection_size : int, default 2
-        Thickness of connecting lines in pixels
+        Thickness of connecting lines in pixels.
     horizontal_bar_size : int, default 20
-        Height of horizontal bars in pixels
+        Height of horizontal bars in pixels.
     vertical_bar_label_size : int, default 16
-        Font size of vertical bar labels
+        Font size of vertical bar labels.
     vertical_bar_padding : int, default 20
-        Padding between vertical bars
+        Padding between vertical bars.
+    theme : str, optional
+        Altair theme to use. If None, uses the current default theme.
 
     Returns
     -------
-    altair.vegalite.v4.api.Chart
-        An Altair chart object representing the UpSet plot
+    altair.Chart
+        An Altair chart object representing the UpSet plot.
 
     Examples
     --------
@@ -90,29 +97,51 @@ def UpSetAltair(
     ... })
     >>> chart = au.UpSetAltair(
     ...     data=data,
-    ...     title="Sample UpSet Plot",
-    ...     sets=["set1", "set2", "set3"]
+    ...     sets=["set1", "set2", "set3"],
+    ...     title="Sample UpSet Plot"
     ... )
+
+    Notes
+    -----
+    The plot consists of three main components:
+    1. A matrix view showing set intersections
+    2. A vertical bar chart showing intersection sizes
+    3. A horizontal bar chart showing set sizes
+
+    References
+    ----------
+    .. [1] Lex, A., Gehlenborg, N., Strobelt, H., Vuillemot, R., & Pfister, H. (2014).
+           UpSet: visualization of intersecting sets.
+           IEEE transactions on visualization and computer graphics, 20(12), 1983-1992.
     """
     # Input validation
-    if (data is None) or (sets is None):
-        print("No data and/or a list of sets are provided")
-        return
-    if (height_ratio < 0) or (1 < height_ratio):
-        print("height_ratio set to 0.5")
-        height_ratio = 0.5
-    if len(sets) != len(abbre):
-        abbre = None
-        print(
-            "Dropping the `abbre` list because the lengths of `sets` and `abbre` are not identical."
-        )
+    if not isinstance(data, pd.DataFrame):
+        raise TypeError("data must be a pandas DataFrame")
+    if not isinstance(sets, list) or not all(isinstance(s, str) for s in sets):
+        raise TypeError("sets must be a list of strings")
+    if not all(s in data.columns for s in sets):
+        raise ValueError("all sets must be columns in data")
+    if not all(data[s].isin([0, 1]).all() for s in sets):
+        raise ValueError("all set columns must contain only 0s and 1s")
+    if height_ratio <= 0 or height_ratio >= 1:
+        raise ValueError("height_ratio must be between 0 and 1")
+    if sort_by not in ["frequency", "degree"]:
+        raise ValueError("sort_by must be either 'frequency' or 'degree'")
+    if sort_order not in ["ascending", "descending"]:
+        raise ValueError("sort_order must be either 'ascending' or 'descending'")
+    if abbre is not None and len(sets) != len(abbre):
+        raise ValueError("if provided, abbre must have the same length as sets")
+
+    # Apply theme if specified
+    if theme is not None:
+        alt.themes.enable(theme)
 
     # Preprocess data
     data, set_to_abbre, set_to_order, abbre = preprocess_data(
         data, sets, abbre, sort_order
     )
 
-    # Setup selections
+    # Setup selections for interactivity
     legend_selection = alt.selection_point(fields=["set"], bind="legend")
     color_selection = alt.selection_point(fields=["intersection_id"], on="mouseover")
     opacity_selection = alt.selection_point(fields=["intersection_id"])
@@ -131,7 +160,7 @@ def UpSetAltair(
     brush_color = alt.condition(
         ~color_selection, alt.value(main_color), alt.value(highlight_color)
     )
-    is_show_horizontal_bar_label_bg = len(abbre[0]) <= 2
+    is_show_horizontal_bar_label_bg = len(abbre[0]) <= 2 if abbre else True
     horizontal_bar_label_bg_color = (
         "white" if is_show_horizontal_bar_label_bg else "black"
     )
@@ -141,6 +170,7 @@ def UpSetAltair(
     tooltip = [
         alt.Tooltip("max(count):Q", title="Cardinality"),
         alt.Tooltip("degree:Q", title="Degree"),
+        alt.Tooltip("sets:N", title="Sets"),
     ]
 
     # Create base chart
