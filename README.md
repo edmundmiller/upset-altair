@@ -180,3 +180,10 @@ Alexander Lex, Nils Gehlenborg, Hendrik Strobelt, Romain Vuillemot, Hanspeter Pf
 _UpSet: Visualization of Intersecting Sets_,
 IEEE Transactions on Visualization and Computer Graphics (InfoVis '14), vol. 20, no. 12, pp. 1983–1992, 2014.
 doi: [10.1109/TVCG.2014.2346248](https://doi.org/10.1109/TVCG.2014.2346248)
+
+The original function was from [hms-dbmi/upset-altair-notebook](https://github.com/hms-dbmi/upset-altair-notebook). The following updates from that are:
+
+1. Turning it into a package
+2. Snapshoting the functionality with Altair 4
+3. Porting to Altair 5
+4. Adding additional advanced features
