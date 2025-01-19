@@ -7,7 +7,7 @@ requires-python = ">=3.8.1,<4"
 license = {text = "MIT"}
 keywords = ["altair", "visualization", "upset", "sets", "vega"]
 authors = [
-    {name = "Edmund Miller", email = "edmund.a.miller@gmail.com"}
+    {name = "Edmund Miller", email = "git@edmundmiller.dev"}
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
