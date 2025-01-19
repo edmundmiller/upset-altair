@@ -3,7 +3,7 @@ name = "altair-upset"
 dynamic = ["version"]
 description = "Create interactive UpSet plots using Altair"
 readme = "README.md"
-requires-python = ">=3.8.1,<4"
+requires-python = ">=3.9,<4"
 license = {text = "MIT"}
 keywords = ["altair", "visualization", "upset", "sets", "vega"]
 authors = [
@@ -14,15 +14,14 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
-    "altair>=5.0.0",
-    "pandas>=2.0.0",
+    "altair>=5.0.0,<6.0.0",
+    "pandas>=2.0.0,<3.0.0",
 ]
 
 [project.urls]
@@ -50,7 +49,7 @@ docs = [
     "myst-parser>=2.0.0",
 ]
 examples = [
-    "numpy>=1.24.0",
+    "numpy>1.24.4",
     "scikit-learn>=1.0.0",  # For advanced examples
     "jupyter>=1.0.0",       # For interactive examples
     "ipywidgets>=8.0.0",   # For interactive widgets
