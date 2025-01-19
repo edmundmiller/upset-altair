@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2025-01-19
 
 ### Added
 
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Interactive tooltips with set information
 - Customizable chart dimensions and styling
 - Proper error handling with descriptive messages
+- Instructions for building and viewing the documentation
 
 ### Changed
 
@@ -35,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Error handling for invalid parameters
 - Documentation formatting and examples
 
-## [0.2.0] - 2024-01-18
+## [0.2.0] - 2025-01-18
 
 ### Changed
 
@@ -58,13 +59,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed PNG snapshot generation and tracking
 - Resolved validation errors for chart sizing in Altair 5
 
-## [0.1.1] - 2024-01-18
+## [0.1.1] - 2025-01-18
 
 ### Changed
 
 - Split the original function into separate files for division of concerns
 
-## [0.1.0] - 2024-01-18
+## [0.1.0] - 2025-01-18
 
 ### Added
 
