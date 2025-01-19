@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the original UpSet paper as below."
+authors:
+- family-names: "Miller"
+  given-names: "Edmund"
+title: "Upset Altair"
+version: 0.3.0
+type: software
+url: "https://github.com/edmundmiller/altair-upset"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Lex"
+    given-names: "Alexander"
+  - family-names: "Gehlenborg"
+    given-names: "Nils"
+  - family-names: "Strobelt"
+    given-names: "Hendrik"
+  - family-names: "Vuillemot"
+    given-names: "Romain"
+  - family-names: "Pfister"
+    given-names: "Hanspeter"
+  title: "UpSet: Visualization of Intersecting Sets"
+  journal: "IEEE Transactions on Visualization and Computer Graphics"
+  volume: 20
+  issue: 12
+  year: 2014
+  start: 1983
+  end: 1992
+  doi: "10.1109/TVCG.2014.2346248"
