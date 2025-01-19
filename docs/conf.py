@@ -13,18 +13,21 @@ author = 'Edmund Miller'
 
 # Extensions
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.doctest',
-    'sphinx.ext.coverage',
-    'sphinx.ext.githubpages',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.intersphinx',
-    'sphinx_gallery.gen_gallery',
-    'numpydoc',
-    'sphinxext_altair.altairplot',
-    'myst_parser',  # Add myst_parser for markdown support
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinxext_altair.altairplot",
+    "myst_nb",  # Add support for notebook-style code execution and includes myst_parser
 ]
+
+# Source parsers
+source_parsers = {
+    '.md': 'myst_nb.parser.NotebookParser',
+}
+
+# Source suffix
+source_suffix = ['.rst', '.md']
 
 # MyST Parser settings
 myst_enable_extensions = [
@@ -40,23 +43,10 @@ myst_enable_extensions = [
     "tasklist",      # For task lists
 ]
 
-# Sphinx Gallery configuration
-sphinx_gallery_conf = {
-    'examples_dirs': '../examples',  # path to example scripts
-    'gallery_dirs': 'gallery',       # where to generate gallery
-    'filename_pattern': r'.*\.py',
-    'ignore_pattern': r'/__init__\.py',
-    'plot_gallery': True,
-    'thumbnail_size': (400, 280),
-    'download_all_examples': True,
-    'within_subsection_order': 'FileNameSortKey',
-    'show_memory': False,
-    'capture_repr': ('_repr_html_', '__repr__'),
-    'image_scrapers': ('matplotlib',),
-    'remove_config_comments': True,
-    'line_numbers': True,
-    'default_thumb_file': None,
-}
+# MyST-NB settings
+nb_execution_mode = "force"
+nb_execution_timeout = 300
+nb_execution_allow_errors = False
 
 # Theme settings
 html_theme = "pydata_sphinx_theme"
@@ -81,12 +71,6 @@ html_context = {
     "github_repo": "altair-upset",
     "github_version": "main",
     "doc_path": "docs",
-}
-
-# Source suffix
-source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
 }
 
 # Intersphinx mapping
@@ -114,5 +98,6 @@ autodoc_typehints = 'none'
 # Generate autosummary even if no references
 autosummary_generate = True
 
-# Altair settings
-altair_plot_links = {"editor": True, "source": False, "export": False}
+# Altair plot output settings
+altair_plot_links = True
+altair_output_type = "html"

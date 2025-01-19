@@ -62,38 +62,10 @@ Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: User Guide
+   :caption: Contents:
 
-   installation
-   quickstart
-   advanced_usage
+   examples/basic_upset
    api
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Examples
-
-   gallery/index
-   gallery/basic_upset
-   gallery/gene_sets
-   gallery/custom_tooltips
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Development
-
-   contributing
-   changelog
-
-Features
---------
-
-- 🎨 Beautiful, interactive visualizations powered by Altair/Vega-Lite
-- 🔄 Dynamic sorting by frequency or degree
-- 🎯 Interactive highlighting and filtering
-- 📱 Responsive design that works in Jupyter notebooks and web browsers
-- 🎨 Customizable colors, sizes, and themes
-- 🔍 Tooltips with detailed intersection information
 
 Indices and tables
 -----------------

@@ -46,7 +46,7 @@ wheels = [
 
 [[package]]
 name = "altair-upset"
-version = "0.3.1.dev19+g72aedb4.d20250119"
+version = "0.3.1.dev19+gff7d01d.d20250119"
 source = { editable = "." }
 dependencies = [
     { name = "altair" },
@@ -65,7 +65,6 @@ docs = [
     { name = "numpydoc" },
     { name = "pydata-sphinx-theme" },
     { name = "sphinx" },
-    { name = "sphinx-gallery" },
     { name = "sphinxext-altair" },
 ]
 examples = [
@@ -99,7 +98,6 @@ docs = [
     { name = "numpydoc", specifier = ">=1.6.0" },
     { name = "pydata-sphinx-theme", specifier = ">=0.14.0" },
     { name = "sphinx", specifier = ">=7.0.0" },
-    { name = "sphinx-gallery", specifier = ">=0.15.0" },
     { name = "sphinxext-altair", specifier = ">=0.2.0" },
 ]
 examples = [
@@ -2822,19 +2820,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/5b/be/50e50cb4f2eff47df05673d361095cafd95521d2a22521b920c67a372dcb/sphinx-7.4.7.tar.gz", hash = "sha256:242f92a7ea7e6c5b406fdc2615413890ba9f699114a9c09192d7dfead2ee9cfe", size = 8067911 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0d/ef/153f6803c5d5f8917dbb7f7fcf6d34a871ede3296fa89c2c703f5f8a6c8e/sphinx-7.4.7-py3-none-any.whl", hash = "sha256:c2419e2135d11f1951cd994d6eb18a1835bd8fdd8429f9ca375dc1f3281bd239", size = 3401624 },
-]
-
-[[package]]
-name = "sphinx-gallery"
-version = "0.18.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pillow" },
-    { name = "sphinx" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ac/84/e4b4cde6ea2f3a1dd7d523dcf28260e93999b4882cc352f8bc6a14cbd848/sphinx_gallery-0.18.0.tar.gz", hash = "sha256:4b5b5bc305348c01d00cf66ad852cfd2dd8b67f7f32ae3e2820c01557b3f92f9", size = 466371 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a3/f3/8fd1ef84f318d404dcd713c54647e616d93396beb28db216e281ba86d728/sphinx_gallery-0.18.0-py3-none-any.whl", hash = "sha256:54317366e77b182672797e5b46ab13cca9a27eafc3142c59dc4c211d4afe3420", size = 448725 },
 ]
 
 [[package]]
