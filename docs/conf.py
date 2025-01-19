@@ -2,24 +2,28 @@
 
 import os
 import sys
+from datetime import datetime
+
 sys.path.insert(0, os.path.abspath('..'))
 
 # Project information
 project = 'altair-upset'
-copyright = '2024, Edmund Miller'
+copyright = f'2024-{datetime.now().year}, Edmund Miller'
 author = 'Edmund Miller'
 
 # Extensions
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.doctest',
+    'sphinx.ext.coverage',
+    'sphinx.ext.githubpages',
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
     'sphinx_gallery.gen_gallery',
     'numpydoc',
-    'myst_parser',
-    'pydata_sphinx_theme',
-    'sphinx_design',  # For PyData theme components
+    'sphinxext_altair.altairplot',
+    'myst_parser',  # Add myst_parser for markdown support
 ]
 
 # MyST Parser settings
@@ -40,16 +44,18 @@ myst_enable_extensions = [
 sphinx_gallery_conf = {
     'examples_dirs': '../examples',  # path to example scripts
     'gallery_dirs': 'gallery',       # where to generate gallery
-    'filename_pattern': '.*\.py',
-    'ignore_pattern': '/__init__\.py',
+    'filename_pattern': r'.*\.py',
+    'ignore_pattern': r'/__init__\.py',
     'plot_gallery': True,
-    'thumbnail_size': (400, 400),
+    'thumbnail_size': (400, 280),
     'download_all_examples': True,
-    'within_subsection_order': lambda folder: sorted(folder),
-    'default_thumb_file': '_static/logo.png',
+    'within_subsection_order': 'FileNameSortKey',
     'show_memory': False,
     'capture_repr': ('_repr_html_', '__repr__'),
-    'image_scrapers': ('altair', ),
+    'image_scrapers': ('matplotlib',),
+    'remove_config_comments': True,
+    'line_numbers': True,
+    'default_thumb_file': None,
 }
 
 # Theme settings
@@ -86,22 +92,27 @@ source_suffix = {
 # Intersphinx mapping
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
-    'altair': ('https://altair-viz.github.io/getting_started/overview.html', None),
+    'altair': ('https://altair-viz.github.io/', None),
     'pandas': ('https://pandas.pydata.org/docs/', None),
 }
 
-# Other settings
-autodoc_member_order = 'bysource'
-add_module_names = False
-napoleon_google_docstring = False
-napoleon_numpy_docstring = True
-napoleon_include_init_with_doc = False
-napoleon_include_private_with_doc = False
-napoleon_include_special_with_doc = False
-napoleon_use_admonition_for_examples = False
-napoleon_use_admonition_for_notes = False
-napoleon_use_admonition_for_references = False
-napoleon_use_ivar = False
-napoleon_use_param = True
-napoleon_use_rtype = True
-napoleon_type_aliases = None 
+# Paths and static files
+html_static_path = []  # Empty since we don't have static files yet
+templates_path = ['_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# Numpydoc settings
+numpydoc_show_class_members = False
+numpydoc_show_inherited_class_members = False
+numpydoc_class_members_toctree = False
+
+# Autodoc settings
+autodoc_default_flags = ['members', 'inherited-members']
+autodoc_member_order = 'groupwise'
+autodoc_typehints = 'none'
+
+# Generate autosummary even if no references
+autosummary_generate = True
+
+# Altair settings
+altair_plot_links = {"editor": True, "source": False, "export": False}
