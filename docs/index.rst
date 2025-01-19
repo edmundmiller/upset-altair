@@ -69,11 +69,7 @@ Contents
     :maxdepth: 2
     :caption: Contents:
 
-    examples/README
-    examples/basic_upset
-    examples/custom_tooltips
-    examples/gene_sets
-    examples/advanced_features
+    examples/index
     api
 
 Indices and tables

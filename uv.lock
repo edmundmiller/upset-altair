@@ -46,7 +46,7 @@ wheels = [
 
 [[package]]
 name = "altair-upset"
-version = "0.3.1.dev23+ge58ae57.d20250119"
+version = "0.3.1.dev23+g83a8fd2.d20250119"
 source = { editable = "." }
 dependencies = [
     { name = "altair" },
@@ -66,7 +66,6 @@ docs = [
     { name = "myst-parser" },
     { name = "numpydoc" },
     { name = "pydata-sphinx-theme" },
-    { name = "rstfmt" },
     { name = "sphinx" },
     { name = "sphinxext-altair" },
 ]
@@ -101,8 +100,7 @@ docs = [
     { name = "matplotlib", specifier = ">=3.8.0" },
     { name = "myst-parser", specifier = ">=2.0.0" },
     { name = "numpydoc", specifier = ">=1.6.0" },
-    { name = "pydata-sphinx-theme", specifier = ">=0.14.0" },
-    { name = "rstfmt", specifier = ">=0.0.14" },
+    { name = "pydata-sphinx-theme", specifier = ">=0.16.1" },
     { name = "sphinx", specifier = ">=7.0.0" },
     { name = "sphinxext-altair", specifier = ">=0.2.0" },
 ]
@@ -2782,20 +2780,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/08/cd/3a1b35eb9da27ffbb981cfffd32a01c7655c4431ccb278cb3064f8887462/rpds_py-0.22.3-pp39-pypy39_pp73-musllinux_1_2_i686.whl", hash = "sha256:2de29005e11637e7a2361fa151f780ff8eb2543a0da1413bb951e9f14b699ef3", size = 584412 },
     { url = "https://files.pythonhosted.org/packages/87/91/31d1c5aeb1606f71188259e0ba6ed6f5c21a3c72f58b51db6a8bd0aa2b5d/rpds_py-0.22.3-pp39-pypy39_pp73-musllinux_1_2_x86_64.whl", hash = "sha256:666ecce376999bf619756a24ce15bb14c5bfaf04bf00abc7e663ce17c3f34fe7", size = 553446 },
     { url = "https://files.pythonhosted.org/packages/e7/ad/03b5ccd1ab492c9dece85b3bf1c96453ab8c47983936fae6880f688f60b3/rpds_py-0.22.3-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:5246b14ca64a8675e0a7161f7af68fe3e910e6b90542b4bfb5439ba752191df6", size = 233013 },
-]
-
-[[package]]
-name = "rstfmt"
-version = "0.0.14"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "black" },
-    { name = "docutils" },
-    { name = "sphinx" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/a5/c7/544357eee7b190946bdb92626d0a56ce0c7784a1fc9b04320f95516508d8/rstfmt-0.0.14.tar.gz", hash = "sha256:5dd5e6988386f21fd89adc015baca64588c38fa89a87ab691f81c7675162b3d2", size = 22297 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b7/d8/0fd8c425ae8afa1076c98bef8b3916a46046d157ea1b61da1fee62baeeaa/rstfmt-0.0.14-py3-none-any.whl", hash = "sha256:5488be45c457239cf512239899caebd5f67bbff562e826fe3eb2059335535b2a", size = 17399 },
 ]
 
 [[package]]

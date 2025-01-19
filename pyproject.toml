@@ -46,7 +46,7 @@ dev = [
 ]
 docs = [
     "sphinx>=7.0.0",
-    "pydata-sphinx-theme>=0.14.0",
+    "pydata-sphinx-theme>=0.16.1",
     "numpydoc>=1.6.0",
     "myst-parser>=2.0.0",
     "sphinxext-altair>=0.2.0",
