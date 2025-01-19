@@ -18,6 +18,8 @@ extensions = [
     'sphinx_gallery.gen_gallery',
     'numpydoc',
     'myst_parser',
+    'pydata_sphinx_theme',
+    'sphinx_design',  # For PyData theme components
 ]
 
 # MyST Parser settings
@@ -38,7 +40,7 @@ myst_enable_extensions = [
 sphinx_gallery_conf = {
     'examples_dirs': '../examples',  # path to example scripts
     'gallery_dirs': 'gallery',       # where to generate gallery
-    'filename_pattern': '/.*\.py',
+    'filename_pattern': '.*\.py',
     'ignore_pattern': '/__init__\.py',
     'plot_gallery': True,
     'thumbnail_size': (400, 400),
@@ -50,13 +52,29 @@ sphinx_gallery_conf = {
     'image_scrapers': ('altair', ),
 }
 
-# Theme
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
-html_logo = '_static/logo.png'
+# Theme settings
+html_theme = "pydata_sphinx_theme"
 html_theme_options = {
-    'logo_only': True,
-    'display_version': True,
+    "show_toc_level": 2,
+    "navigation_depth": 4,
+    "collapse_navigation": True,
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/edmundmiller/altair-upset",
+            "icon": "fab fa-github-square",
+        },
+    ],
+    "use_edit_page_button": True,
+    "show_nav_level": 2,
+}
+
+# GitHub repository
+html_context = {
+    "github_user": "edmundmiller",
+    "github_repo": "altair-upset",
+    "github_version": "main",
+    "doc_path": "docs",
 }
 
 # Source suffix

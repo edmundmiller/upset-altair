@@ -1,7 +1,0 @@
-altair>=5.0.0,<6.0.0
-pandas>=2.0.0,<3.0.0
-sphinx>=7.0.0
-sphinx-rtd-theme>=2.0.0
-sphinx-gallery>=0.15.0
-numpydoc>=1.6.0
-myst-parser>=2.0.0
