@@ -1,3 +1,4 @@
 - [ ] Set up a Read the Docs account and connect it to your repository
 - [ ] Add a READTHEDOCS_TOKEN secret to your GitHub repository
 - [ ] Create a docs/_static directory and add a logo image
+- [ ] Fix the plot rendering on the docs

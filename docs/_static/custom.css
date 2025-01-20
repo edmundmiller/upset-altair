@@ -1,0 +1,30 @@
+/* Control content width */
+.bd-main .bd-content .bd-article-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Custom styles for Altair plots */
+.altair-plot {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: visible !important;
+}
+
+.vega-embed {
+    width: 100%;
+    padding-right: 0 !important;
+}
+
+/* Ensure plots are responsive */
+.vega-embed canvas {
+    max-width: 100%;
+    height: auto !important;
+}
+
+/* Adjust plot container padding */
+.bd-article-container .section {
+    overflow-x: visible;
+    padding: 0 1rem;
+}

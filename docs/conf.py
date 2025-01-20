@@ -54,7 +54,10 @@ intersphinx_mapping = {
 }
 
 # Paths and static files
-html_static_path = []  # Empty since we don't have static files yet
+html_static_path = ['_static']  # Include _static directory
+html_css_files = [
+    'custom.css',
+]
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
@@ -74,3 +77,9 @@ autosummary_generate = True
 # Altair plot output settings
 altair_plot_links = True
 altair_output_type = "html"
+altair_plot_width = None  # Let Altair handle width responsively
+altair_plot_height = None  # Let Altair handle height responsively
+altairplot_html_renderer = "html"
+altairplot_vega_js_url = "https://cdn.jsdelivr.net/npm/vega@5"
+altairplot_vegalite_js_url = "https://cdn.jsdelivr.net/npm/vega-lite@5"
+altairplot_vegaembed_js_url = "https://cdn.jsdelivr.net/npm/vega-embed@6"
