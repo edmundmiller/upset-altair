@@ -1,8 +1,8 @@
 Using Polars with UpSet Plots
-==========================
+=============================
 
-This example demonstrates how to use Polars DataFrames with UpSet plots. Polars is a fast
-DataFrame library written in Rust that can be used as an alternative to pandas.
+This example demonstrates how to use Polars DataFrames with UpSet plots. Polars is a
+fast DataFrame library written in Rust that can be used as an alternative to pandas.
 
 First, let's import the necessary libraries and create our sample data using Polars:
 
@@ -29,10 +29,10 @@ First, let's import the necessary libraries and create our sample data using Pol
     data = pl.DataFrame(data_dict)
 
 Basic UpSet Plot with Polars Data
---------------------------------
+---------------------------------
 
-Create a simple UpSet plot using Polars DataFrame. Note that the UpSet plot function will
-automatically convert the Polars DataFrame to pandas internally:
+Create a simple UpSet plot using Polars DataFrame. Note that the UpSet plot function
+will automatically convert the Polars DataFrame to pandas internally:
 
 .. altair-plot::
 
@@ -47,7 +47,7 @@ automatically convert the Polars DataFrame to pandas internally:
     ).chart
 
 Working with Different Data Types
---------------------------------
+---------------------------------
 
 Polars supports various data types that can be used with UpSet plots. Here's an example
 using different data types:
@@ -73,10 +73,11 @@ using different data types:
     ).chart
 
 Performance Benefits
-------------------
+--------------------
 
-When working with large datasets, you can leverage Polars' fast data manipulation capabilities
-before creating the UpSet plot. Here's an example of preprocessing data with Polars:
+When working with large datasets, you can leverage Polars' fast data manipulation
+capabilities before creating the UpSet plot. Here's an example of preprocessing data
+with Polars:
 
 .. altair-plot::
 

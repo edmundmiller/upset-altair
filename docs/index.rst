@@ -15,8 +15,8 @@ Welcome to altair-upset's documentation!
 
 Create beautiful and interactive UpSet plots using Altair. UpSet plots are a powerful
 alternative to Venn diagrams for visualizing set intersections, especially when dealing
-with many sets. The library supports both Pandas and Polars DataFrames, making it flexible
-for different data processing workflows.
+with many sets. The library supports both Pandas and Polars DataFrames, making it
+flexible for different data processing workflows.
 
 Quick Start
 -----------
@@ -46,10 +46,9 @@ Basic Usage
 You can use altair-upset with either Pandas or Polars DataFrames:
 
 .. altair-plot::
-
     import altair_upset as au
     import pandas as pd
-    
+
     # Using Pandas
     data = pd.DataFrame({
         'set1': [1, 0, 1, 1],
@@ -64,8 +63,10 @@ You can use altair-upset with either Pandas or Polars DataFrames:
         title="Sample UpSet Plot"
     ).chart
 
-For Polars usage and more advanced examples, check out the :doc:`examples/polars_example`
-in our example gallery.
+    chart
+
+For Polars usage and more advanced examples, check out the
+:doc:`examples/polars_example` in our example gallery.
 
 Contents
 --------
