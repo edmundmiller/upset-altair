@@ -22,7 +22,6 @@ classifiers = [
 dependencies = [
     "altair>=5.0.0,<6.0.0",
     "pandas>=2.0.0,<3.0.0",
-    # "scipy>=1.10.0,<2.0.0",
 ]
 
 [project.urls]
@@ -52,12 +51,6 @@ docs = [
     "sphinxext-altair>=0.2.0",
     "matplotlib>=3.8.0",
     "docstrfmt>=1.9.0",
-]
-examples = [
-    "numpy>1.24.4",
-    "scikit-learn>=1.0.0",  # For advanced examples
-    "jupyter>=1.0.0",       # For interactive examples
-    "ipywidgets>=8.0.0",   # For interactive widgets
 ]
 
 [tool.pytest.ini_options]
