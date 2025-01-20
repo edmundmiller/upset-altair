@@ -253,7 +253,7 @@ def UpSetAltair(
     vertical_bar_chart = (
         (vertical_bar + vertical_bar_text)
         .add_params(color_selection)
-        .properties(width=width)
+        .properties(width=matrix_width, height=vertical_bar_chart_height)
     )
 
     circle_bg, rect_bg, circle, line_connection = create_matrix_view(
@@ -268,7 +268,7 @@ def UpSetAltair(
     matrix_view = (
         (circle + rect_bg + circle_bg + line_connection + circle)
         .add_params(color_selection)
-        .properties(width=matrix_width, height=matrix_height)
+        .properties(width=matrix_width)
     )
 
     horizontal_bar_label_bg, horizontal_bar_label, horizontal_bar = (
@@ -291,7 +291,7 @@ def UpSetAltair(
 
     # Combine components
     upsetaltair = alt.vconcat(
-        vertical_bar_chart.properties(height=vertical_bar_chart_height),
+        vertical_bar_chart,
         alt.hconcat(
             matrix_view,
             horizontal_bar_axis,
