@@ -17,6 +17,7 @@ Create beautiful and interactive UpSet plots using Altair. UpSet plots are a pow
 - 📱 Responsive design that works in Jupyter notebooks and web browsers
 - 🎨 Customizable colors, sizes, and themes
 - 🔍 Tooltips with detailed intersection information
+- 🚀 Support for both Pandas and Polars DataFrames
 
 ## Installation
 
@@ -35,8 +36,10 @@ conda install -c conda-forge altair-upset
 ```python
 import altair_upset as au
 import pandas as pd
+# Or use Polars
+import polars as pl
 
-# Create sample data
+# Create sample data with Pandas
 data = pd.DataFrame({
     'set1': [1, 0, 1, 1],
     'set2': [1, 1, 0, 1],
@@ -45,7 +48,7 @@ data = pd.DataFrame({
 
 # Create UpSet plot
 chart = au.UpSetAltair(
-    data=data,
+    data=data,  # or data_pl.to_pandas()
     sets=["set1", "set2", "set3"],
     title="Sample UpSet Plot"
 )

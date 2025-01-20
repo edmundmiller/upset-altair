@@ -11,6 +11,7 @@ UpSet plots.
 
    basic_upset
    advanced_features
+   polars_example
 
 .. toctree::
    :maxdepth: 1
@@ -24,10 +25,11 @@ Basic Examples
 --------------
 
 * :doc:`basic_upset` - Getting started with UpSet plots
-* :doc:`custom_tooltips` - Adding custom tooltips and annotations
+* :doc:`advanced_features` - Advanced features and customization options
+* :doc:`polars_example` - Using Polars DataFrames with UpSet plots
 
 Advanced Usage
 --------------
 
-* :doc:`advanced_features` - Advanced interaction and customization options
-* :doc:`gene_sets` - Real-world example: Visualizing gene set intersections
+* :doc:`custom_tooltips` - Adding custom tooltips and annotations
+* :doc:`gene_sets` - Analyzing gene set intersections

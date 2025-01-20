@@ -37,6 +37,8 @@ test = [
     "syrupy>=4.0.0",
     "vl-convert-python>=1.7.0",
     "jsonschema>=4.0.0",
+    "polars>=0.20.0",
+    "pyarrow>=14.0.0",
 ]
 dev = [
     "ruff>=0.1.0",
