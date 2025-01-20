@@ -65,7 +65,7 @@
       ]
     }
   ],
-  "spacing": 20,
+  "spacing": 5,
   "title": {
     "fontSize": 20,
     "fontWeight": 500,
@@ -310,7 +310,7 @@
               },
               "mark": {
                 "opacity": 1,
-                "size": 200,
+                "size": 100,
                 "type": "circle"
               },
               "name": "view_46",
@@ -486,7 +486,7 @@
               },
               "mark": {
                 "opacity": 1,
-                "size": 200,
+                "size": 100,
                 "type": "circle"
               },
               "transform": [
@@ -659,7 +659,7 @@
               },
               "mark": {
                 "color": "#3A3A3A",
-                "size": 2,
+                "size": 1,
                 "type": "bar"
               },
               "transform": [
@@ -826,7 +826,7 @@
               },
               "mark": {
                 "opacity": 1,
-                "size": 200,
+                "size": 100,
                 "type": "circle"
               },
               "transform": [
@@ -1149,7 +1149,7 @@
                 }
               },
               "mark": {
-                "size": 1000,
+                "size": 500,
                 "type": "circle"
               },
               "name": "view_47",

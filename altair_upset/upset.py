@@ -84,9 +84,9 @@ def UpSetAltair(
         "#BDC6CA",
     ],
     highlight_color: str = "#EA4667",
-    glyph_size: int = 200,
-    set_label_bg_size: int = 1000,
-    line_connection_size: int = 2,
+    glyph_size: int = 100,  # Reduced from 200
+    set_label_bg_size: int = 500,  # Reduced from 1000
+    line_connection_size: int = 1,  # Reduced from 2
     horizontal_bar_size: int = 20,
     vertical_bar_label_size: int = 16,
     vertical_bar_padding: int = 20,
@@ -210,7 +210,7 @@ def UpSetAltair(
 
     # Calculate dimensions
     vertical_bar_chart_height = height * height_ratio
-    matrix_height = height - vertical_bar_chart_height
+    matrix_height = (height - vertical_bar_chart_height) * 0.8  # Reduce height to tighten spacing
     matrix_width = width - horizontal_bar_chart_width
     vertical_bar_size = min(
         30,
@@ -298,7 +298,7 @@ def UpSetAltair(
             horizontal_bar.properties(width=horizontal_bar_chart_width),
             spacing=5,
         ).resolve_scale(y="shared"),
-        spacing=20,
+        spacing=5,
     ).add_params(legend_selection)
 
     # Apply configuration

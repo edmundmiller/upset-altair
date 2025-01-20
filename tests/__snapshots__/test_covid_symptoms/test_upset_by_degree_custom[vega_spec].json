@@ -65,7 +65,7 @@
       ]
     }
   ],
-  "spacing": 20,
+  "spacing": 5,
   "title": {
     "fontSize": 20,
     "fontWeight": 500,
