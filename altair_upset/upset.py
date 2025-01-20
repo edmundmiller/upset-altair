@@ -74,7 +74,7 @@ def UpSetAltair(
     width: int = 1200,
     height: int = 700,
     height_ratio: float = 0.6,
-    horizontal_bar_chart_width: int = 300,
+    horizontal_bar_chart_width: Optional[int] = None,
     color_range: List[str] = [
         "#55A8DB",
         "#3070B5",
@@ -209,6 +209,8 @@ def UpSetAltair(
     opacity_selection = alt.selection_point(fields=["intersection_id"])
 
     # Calculate dimensions
+    if horizontal_bar_chart_width is None:
+        horizontal_bar_chart_width = int(width * 0.15)  # Make it 25% of total width
     vertical_bar_chart_height = height * height_ratio
     matrix_height = (height - vertical_bar_chart_height) * 0.8  # Reduce height to tighten spacing
     matrix_width = width - horizontal_bar_chart_width
