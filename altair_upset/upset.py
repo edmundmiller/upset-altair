@@ -298,7 +298,7 @@ def UpSetAltair(
             matrix_view,
             horizontal_bar_axis,
             horizontal_bar.properties(width=horizontal_bar_chart_width),
-            spacing=5,
+            spacing=0,  # Minimize spacing between components
         ).resolve_scale(y="shared"),
         spacing=5,
     ).add_params(legend_selection)
